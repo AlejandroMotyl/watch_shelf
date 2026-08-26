@@ -1,0 +1,56 @@
+/* Hero styles */
+
+.heroSection {
+  padding: 224px 40px 53px 40px;
+  margin: -58px -40px 0px -40px;
+
+  display: flex;
+  position: relative;
+  z-index: 1;
+
+  flex-direction: column;
+  justify-content: flex-end;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.titleWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 36px;
+}
+.title {
+  font: var(--pop-48px-semibold);
+  color: var(--white);
+}
+.description {
+  font: var(--pop-14px-regular);
+  color: var(--white);
+}
+
+.buttonsWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+
+.watchLink {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 14px;
+  font: var(--pop-16px-medium);
+  color: var(--white);
+  width: 139px;
+  height: 54px;
+  padding: 24px 17px;
+  background-color: var(--accent-primary);
+  transition:
+    background-color var(--main-transition),
+    transform var(--main-transition);
+}
+.watchLink:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+}

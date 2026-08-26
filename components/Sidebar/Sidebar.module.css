@@ -1,0 +1,92 @@
+/* Sidebar styles */
+.sidebarWrapper {
+  background: var(--sidebar-bg);
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 56px 40px;
+  height: 100dvh;
+  box-shadow: 2px 0px 90px 9px rgba(97, 0, 194, 0.4);
+}
+
+.logo {
+  font: var(--pop-22px-bold);
+  color: var(--white);
+  margin-bottom: 62px;
+}
+.logo .icon {
+  fill: var(--white);
+  stroke: var(--white);
+}
+
+.navMenu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: currentColor;
+  transition:
+    color var(--main-transition),
+    transform var(--main-transition);
+}
+.moviesNav {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+.navProfile {
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+}
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font: var(--pop-16px-regular);
+  color: var(--white);
+  transition: color var(--main-transition);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.navLink:hover {
+  color: var(--accent-hover);
+}
+.navLink:hover .icon {
+  transform: translateY(-2px);
+}
+.navItem {
+  cursor: pointer;
+}
+
+.authNav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 23px;
+}
+.authLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+}
+.authNav:has(.authLinks:hover) .icon {
+  transform: translateY(-2px);
+}
+.userCatalogue {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}

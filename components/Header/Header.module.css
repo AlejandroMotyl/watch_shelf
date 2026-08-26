@@ -1,0 +1,69 @@
+.header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  color: var(--white);
+  z-index: 10;
+  background: transparent;
+}
+.header:has(> :only-child) {
+  justify-content: flex-end;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: currentColor;
+  transition:
+    color var(--main-transition),
+    transform var(--main-transition);
+}
+.filters {
+  display: flex;
+  gap: 32px;
+}
+
+.filterButton {
+  cursor: pointer;
+  font: var(--pop-16px-regular);
+  color: var(--white);
+  transition: color var(--main-transition);
+}
+.filterButton:hover {
+  color: var(--accent-hover);
+}
+
+.userButtons {
+  display: flex;
+  gap: 24px;
+}
+.userButtons {
+  font: var(--pop-16px-regular);
+  color: var(--white);
+  transition: color var(--main-transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.userButton:hover {
+  color: var(--accent-hover);
+  cursor: pointer;
+}
+
+.headerProfile {
+  display: flex;
+  font: var(--pop-16px-regular);
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: var(--white);
+  transition: color var(--main-transition);
+}
+.headerProfile:hover {
+  color: var(--accent-hover);
+  cursor: pointer;
+}
+.profileImage {
+  border-radius: 24px;
+}

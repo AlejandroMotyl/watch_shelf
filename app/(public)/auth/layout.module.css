@@ -1,0 +1,54 @@
+.layout {
+  position: relative;
+  isolation: isolate;
+  min-height: 100dvh;
+}
+
+.layout::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: url("/images/auth-bg.jpg") center / cover no-repeat;
+
+  opacity: 0.1;
+  z-index: -2;
+}
+
+.layout::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: var(--dark-gradient-bg);
+
+  z-index: -1;
+}
+
+.main {
+  position: relative;
+  height: 100%;
+}
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 200px;
+  height: 100%;
+}
+.logo {
+  font: var(--pop-22px-bold);
+  color: var(--white);
+  margin-bottom: 16px;
+}
+.logo .icon {
+  fill: var(--white);
+  stroke: var(--white);
+  margin-right: 8px;
+}
+.title {
+  font: var(--pop-18px-regular);
+  color: var(--white);
+  margin-bottom: 16px;
+}

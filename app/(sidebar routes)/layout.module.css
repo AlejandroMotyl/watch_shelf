@@ -1,0 +1,8 @@
+.layout {
+  display: grid;
+  grid-template-columns: 274px 1fr;
+  min-height: 100vh;
+}
+.container {
+  padding: 40px;
+}

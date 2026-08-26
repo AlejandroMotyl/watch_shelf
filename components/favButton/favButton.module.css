@@ -1,0 +1,71 @@
+/* favButton styles */
+.favButton {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--glass-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--main-transition);
+}
+.bigFavButton {
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  background: var(--glass-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color var(--main-transition),
+    transform var(--main-transition);
+}
+
+.favButton:hover {
+  background-color: var(--accent-hover);
+}
+.bigFavButton:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+.icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  color: var(--accent-primary);
+  transition:
+    color var(--main-transition),
+    transform var(--main-transition);
+}
+.bigIcon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: var(--accent-primary);
+  transition:
+    color var(--main-transition),
+    transform var(--main-transition);
+}
+
+.favButton:hover .icon,
+.bigFavButton:hover .bigIcon {
+  color: var(--accent-hover);
+  transform: scale(1.05);
+}
+
+.heartFill {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 500ms ease;
+}
+.favButton[data-favorite="true"] .heartFill {
+  clip-path: inset(0 0 0 0);
+}
+
+.bigFavButton[data-favorite="true"] .heartFill {
+  clip-path: inset(0 0 0 0);
+}

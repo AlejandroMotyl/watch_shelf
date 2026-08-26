@@ -1,0 +1,104 @@
+/* AuthForms styles */
+
+.authWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 16px;
+}
+.authButton {
+  border-radius: 14px;
+  padding: 17px 24px;
+  width: 225px;
+  height: 54px;
+  background: var(--accent-primary);
+  color: var(--white);
+  font: var(--pop-16px-medium);
+  margin-top: 16px;
+  transition: background var(--main-transition);
+}
+.authButton:hover,
+.authButton:focus {
+  background: var(--accent-hover);
+}
+
+.authForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+
+  overflow: hidden;
+  transition:
+    border var(--main-transition),
+    padding var(--main-transition),
+    background var(--main-transition);
+}
+.authForm.open {
+  border: 1px solid var(--accent-primary);
+  width: 360px;
+  background: var(--sidebar-bg);
+  padding: 16px;
+}
+
+.formContent {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.formContentInner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.formContent.open {
+  grid-template-rows: 1fr;
+}
+
+.inputLabel {
+  gap: 8px;
+  color: var(--white);
+  font: var(--pop-16px-medium);
+  display: flex;
+  flex-direction: column;
+}
+.formInput {
+  padding: 8px;
+  border-radius: 8px;
+  width: 294px;
+  height: 48px;
+  background: var(--white);
+  color: var(--black);
+  font: var(--pop-16px-bold);
+}
+.formInput::placeholder {
+  opacity: 0;
+  transition: opacity var(--main-transition);
+}
+.formInput:focus::placeholder,
+.formInput:active::placeholder {
+  opacity: 1;
+}
+
+.navText {
+  color: var(--white);
+  font: var(--pop-16px-medium);
+}
+
+.navLink {
+  font: var(--pop-16px-bold);
+  text-decoration: underline;
+  transition: color var(--main-transition);
+}
+.navLink:hover,
+.navLink:focus {
+  color: var(--accent-hover);
+}

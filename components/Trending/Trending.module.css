@@ -1,0 +1,47 @@
+/* Trending styles */
+
+.trendingSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+.title {
+  font: var(--pop-20px-semibold);
+  color: var(--white);
+}
+.trendingList {
+  display: flex;
+  gap: 24px;
+}
+.trendingItem {
+  position: relative;
+  outline: 1px solid var(--gray);
+  padding-top: 215px;
+  background-color: orange;
+  border-radius: 20px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 255px;
+  height: 301px;
+}
+.titleWrapper {
+  padding: 16px 20px;
+  background: var(--glass-bg);
+  opacity: 95%;
+  height: 100%;
+  border-radius: 0 0 20px 20px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.movieTitle {
+  font: var(--pop-16px-semibold);
+  color: var(--black);
+  line-height: 24px;
+  margin-bottom: 6px;
+}
+.description {
+  font: var(--pop-14px-regular);
+  color: var(--black);
+}
