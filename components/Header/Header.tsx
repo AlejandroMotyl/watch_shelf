@@ -28,16 +28,16 @@ export default function Header() {
   const handleLogoutClick = () => {
     setIsModalOpen(true);
   };
-  const handleLogout = async () => {
-    try {
-      // await logout();
-      clearIsAuthenticated();
-      closeMenu();
-      router.push("/");
-    } catch (error) {
-      await showError("Log out failed, try again");
-    }
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     // await logout();
+  //     clearIsAuthenticated();
+  //     closeMenu();
+  //     router.push("/");
+  //   } catch (error) {
+  //     await showError("Log out failed, try again");
+  //   }
+  // };
 
   //no scroll when a mobile menu is open
   useEffect(() => {
