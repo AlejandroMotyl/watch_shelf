@@ -134,3 +134,24 @@ textarea {
   white-space: nowrap;
   border: 0;
 }
+.scrollbarTheme {
+  --os-handle-bg: var(--accent-primary);
+  --os-handle-bg-hover: var(--accent-hover);
+  --os-handle-bg-active: var(--accent-hover);
+  opacity: 0.8;
+  --os-track-bg-hover: var(--glass-bg);
+  --os-track-bg-active: var(--gray);
+  --os-handle-border-radius: 999px;
+  --os-size: 8px;
+}
+.scrollbarGlobalTheme {
+  --os-handle-bg: var(--accent-primary);
+  --os-handle-bg-hover: var(--accent-hover);
+  --os-handle-bg-active: var(--accent-hover);
+  opacity: 0.7;
+  --os-track-bg-hover: var(--glass-bg);
+  --os-track-bg-active: var(--glass-bg);
+  --os-handle-border-radius: 999px;
+
+  --os-size: 12px;
+}

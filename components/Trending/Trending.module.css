@@ -3,39 +3,62 @@
 .trendingSection {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   padding-top: 16px;
-  padding-bottom: 16px;
+  padding-bottom: 8px;
 }
 .title {
   font: var(--pop-20px-semibold);
   color: var(--white);
 }
+
 .trendingList {
   display: flex;
   gap: 24px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
+
 .trendingItem {
+  flex-shrink: 0;
   position: relative;
   outline: 1px solid var(--gray);
-  padding-top: 215px;
-  background-color: orange;
   border-radius: 20px;
   background-repeat: no-repeat;
+  background-position: center;
   background-size: cover;
   width: 255px;
   height: 301px;
+  transition:
+    transform 180ms ease,
+    outline-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.trendingItem:hover {
+  transform: translateY(-4px) scale(1.015);
+  outline-color: var(--white);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 20%);
+}
+.trendingLink {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
 }
 .titleWrapper {
   padding: 16px 20px;
   background: var(--glass-bg);
   opacity: 95%;
-  height: 100%;
+  max-height: 255px;
   border-radius: 0 0 20px 20px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
-.movieTitle {
+.mediaTitle {
   font: var(--pop-16px-semibold);
   color: var(--black);
   line-height: 24px;

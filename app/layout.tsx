@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "izitoast/dist/css/iziToast.min.css";
+import "overlayscrollbars/overlayscrollbars.css";
 import "./globals.css";
 import TanStackProvider from "@/components/TanStackProvider/TanStackProvider";
+import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
+import GlobalScrollbar from "@/components/globalScrollbar/globalScrollbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +30,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
-        <TanStackProvider>{children}</TanStackProvider>
+        <GlobalScrollbar>
+          <TanStackProvider>{children}</TanStackProvider>
+        </GlobalScrollbar>
       </body>
     </html>
   );

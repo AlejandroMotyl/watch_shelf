@@ -2,6 +2,7 @@
 .favButton {
   position: absolute;
   right: 20px;
+  z-index: 2;
   top: 20px;
   width: 32px;
   height: 32px;

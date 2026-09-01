@@ -1,4 +1,4 @@
-.moviePage {
+.mediaPage {
   width: 100%;
   min-height: 100%;
 
@@ -8,7 +8,7 @@
   padding: 40px 24px;
 }
 
-.movieCard {
+.mediaCard {
   width: 100%;
   max-width: 1000px;
 
@@ -17,7 +17,7 @@
   gap: 32px;
 }
 
-.movieHero {
+.mediaHero {
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 40px;
@@ -48,7 +48,7 @@
   object-fit: cover;
 }
 
-.movieInfo {
+.mediaInfo {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -56,13 +56,13 @@
   gap: 24px;
 }
 
-.movieHeader {
+.mediaHeader {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.movieType {
+.mediaType {
   color: var(--accent-primary);
 
   font-size: 14px;
@@ -70,7 +70,7 @@
   text-transform: uppercase;
 }
 
-.movieTitle {
+.mediaTitle {
   margin: 0;
 
   color: var(--white);
@@ -79,7 +79,7 @@
   line-height: 1.1;
 }
 
-.movieMeta {
+.mediaMeta {
   margin: 0;
 
   color: var(--text-secondary);
@@ -138,7 +138,7 @@
 
 /* Description */
 
-.movieDescription {
+.mediaDescription {
   max-width: 650px;
 
   margin: 0;
@@ -151,7 +151,7 @@
 
 /* Actions */
 
-.movieActions {
+.mediaActions {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -246,9 +246,9 @@
   line-height: 1.5;
 }
 
-/* IMDb */
+/* TMDb */
 
-.imdbSection {
+.TMDbSection {
   padding: 24px 28px;
 
   border-radius: 20px;
@@ -256,13 +256,13 @@
   background: var(--sidebar-bg);
 }
 
-.imdbHeader {
+.TMDbHeader {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
-.imdbBadge {
+.TMDbBadge {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -272,14 +272,14 @@
 
   border-radius: 6px;
 
-  background: #f5c518;
-  color: #000;
+  background: #01b4e4;
+  color: #fff;
 
   font-size: 16px;
   font-weight: 800;
 }
 
-.imdbInfo {
+.TMDbInfo {
   display: flex;
   flex-direction: column;
   gap: 3px;
@@ -287,33 +287,87 @@
   flex: 1;
 }
 
-.imdbTitle {
+.TMDbTitle {
   color: var(--white);
 
   font-size: 15px;
   font-weight: 600;
 }
 
-.imdbSubtitle {
+.TMDbSubtitle {
   color: var(--text-secondary);
 
   font-size: 12px;
 }
 
-.imdbRating {
+.TMDbRating {
   display: flex;
   align-items: baseline;
 }
 
-.imdbScore {
+.TMDbScore {
   color: var(--white);
 
   font-size: 24px;
   font-weight: 700;
 }
 
-.imdbMax {
+.TMDbMax {
   color: var(--text-secondary);
 
   font-size: 13px;
+}
+.userRating {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  border: 1px solid var(--accent-primary);
+  border-radius: 10px;
+  background: transparent;
+}
+
+.ratingLabel {
+  color: var(--text-secondary);
+  font-size: 24px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.starRating {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.starButton {
+  width: 24px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color var(--main-transition),
+    transform var(--main-transition);
+}
+
+.starButton:hover {
+  color: var(--accent-primary);
+  transform: scale(1.1);
+}
+
+.starActive {
+  color: var(--accent-primary);
+}
+
+.ratingValue {
+  min-width: 28px;
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 700;
 }

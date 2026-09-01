@@ -1,8 +1,8 @@
 .layout {
   display: grid;
-  grid-template-columns: 274px 1fr;
+  grid-template-columns: 274px minmax(0, 1fr);
   min-height: 100vh;
 }
-.container {
+.main {
   padding: 40px;
 }

@@ -7,8 +7,11 @@ import { createPortal } from "react-dom";
 import { useAuthStore } from "@/lib/store/authStore/authStore";
 import { showError } from "@/utils/iziToast";
 import { usePathname } from "next/navigation";
+import { useMediaFilterStore } from "@/lib/store/mediaFilterStore/mediaFilterStore";
 
 export default function Header() {
+  const { filter, setFilter } = useMediaFilterStore();
+
   // const { isAuthenticated, clearIsAuthenticated,user } = useAuthStore();
   const isAuthenticated = true;
   const user = {
@@ -58,9 +61,30 @@ export default function Header() {
     <header className={css.header}>
       {pathname !== "/profile" && !pathname.startsWith("/catalogue/") && (
         <div className={css.filters}>
-          <button className={css.filterButton}>Movies</button>
-          <button className={css.filterButton}>Series</button>
-          <button className={css.filterButton}>Documentaries</button>
+          <button
+            className={`${css.filterButton} ${filter === "movie" ? css.active : ""}`}
+            type="button"
+            onClick={() => setFilter("movie")}
+            disabled={filter === "movie"}
+          >
+            Movies
+          </button>
+          <button
+            className={`${css.filterButton} ${filter === "tv" ? css.active : ""}`}
+            type="button"
+            onClick={() => setFilter("tv")}
+            disabled={filter === "tv"}
+          >
+            Series
+          </button>
+          <button
+            className={`${css.filterButton} ${filter === "people" ? css.active : ""}`}
+            type="button"
+            onClick={() => setFilter("people")}
+            disabled={filter === "people"}
+          >
+            People
+          </button>
         </div>
       )}
       {isAuthenticated && user && (
