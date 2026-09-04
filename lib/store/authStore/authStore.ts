@@ -4,7 +4,7 @@ import { User } from "@/types/user";
 export interface AuthProps {
   user: User | null;
   isAuthenticated: boolean;
-  setUser: (user: User) => void;
+  setUser: (user: User | null) => void;
   clearIsAuthenticated: () => void;
 }
 

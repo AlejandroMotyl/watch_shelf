@@ -1,9 +1,10 @@
-export interface User {
-  _id: string;
-  name: string;
+export type User = {
+  avatar_url: string;
+  id: number;
+  username: string;
   email: string;
-  avatarUrl: string;
-}
+  created_at: Date;
+};
 
 export interface LoginData {
   email: string;

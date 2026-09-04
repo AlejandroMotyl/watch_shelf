@@ -1,7 +1,8 @@
 import { ApiResponse, MediaStaff, TVId, MovieId } from "@/types/media";
 import { api } from "./api";
 import { filterParams } from "@/types/filter";
-import { MediaReviewsResponse, ReviewsResponse } from "@/types/reviews";
+import { MediaReviewsResponse } from "@/types/reviews";
+import { LoginData, RegisterData, User } from "@/types/user";
 
 interface CheckSessionRequest {
   success: boolean;
@@ -12,6 +13,7 @@ export type GetMediaByIdResponse = {
   staff: MediaStaff;
 };
 
+// !!!!!!!!! MEDIA
 export const getTrending = async (
   filter: filterParams,
 ): Promise<ApiResponse> => {
@@ -34,5 +36,35 @@ export const getReviews = async (
 ): Promise<MediaReviewsResponse> => {
   const { data } = await api.get<MediaReviewsResponse>(`/reviews/${filter}`);
 
+  return data;
+};
+
+// !!!!!!!!! PROFILE
+
+export const getProfile = async (): Promise<User> => {
+  const { data } = await api.get<User>("/profile");
+
+  return data;
+};
+
+// !!!!!!!!! AUTH
+
+export const checkSession = async () => {
+  const { data } = await api.post<CheckSessionRequest>("/auth/session", {});
+  return data.success;
+};
+
+export const logout = async (): Promise<void> => {
+  const { data } = await api.post<void>("/auth/logout");
+  return data;
+};
+
+export const register = async (credentials: RegisterData) => {
+  const { data } = await api.post<User>("/auth/register", credentials);
+  return data;
+};
+
+export const login = async (credentials: LoginData) => {
+  const { data } = await api.post<User>("/auth/login", credentials);
   return data;
 };

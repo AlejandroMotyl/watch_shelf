@@ -3,8 +3,8 @@ import css from "./Sidebar.module.css";
 import { useAuthStore } from "@/lib/store/authStore/authStore";
 
 export default function Sidebar() {
-  // const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const isAuthenticated = true;
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
   return (
     <aside className={css.sidebarWrapper}>
       <Link className={css.logo} href="/catalogue">

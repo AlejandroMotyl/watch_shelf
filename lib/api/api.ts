@@ -4,7 +4,4 @@ const baseUrl = process.env.NEXT_PUBLIC_API_URL + "/api";
 export const api = axios.create({
   baseURL: baseUrl,
   withCredentials: true,
-  headers: {
-    Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`
-  },
 });

@@ -6,6 +6,7 @@ import "./globals.css";
 import TanStackProvider from "@/components/TanStackProvider/TanStackProvider";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import GlobalScrollbar from "@/components/globalScrollbar/globalScrollbar";
+import AuthProvider from "@/components/AuthProvider/AuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,9 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
         <GlobalScrollbar>
-          <TanStackProvider>{children}</TanStackProvider>
+          <TanStackProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </TanStackProvider>
         </GlobalScrollbar>
       </body>
     </html>

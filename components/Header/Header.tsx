@@ -8,16 +8,13 @@ import { useAuthStore } from "@/lib/store/authStore/authStore";
 import { showError } from "@/utils/iziToast";
 import { usePathname } from "next/navigation";
 import { useMediaFilterStore } from "@/lib/store/mediaFilterStore/mediaFilterStore";
+import { useQuery } from "@tanstack/react-query";
+import { getProfile } from "@/lib/api/clientApi";
+import Link from "next/link";
 
 export default function Header() {
   const { filter, setFilter } = useMediaFilterStore();
-
-  // const { isAuthenticated, clearIsAuthenticated,user } = useAuthStore();
-  const isAuthenticated = true;
-  const user = {
-    avatarUrl: "https://i.pravatar.cc/150?img=12",
-    name: "asdasdasdohn",
-  };
+  const { isAuthenticated, clearIsAuthenticated, user } = useAuthStore();
 
   const pathname = usePathname();
 
@@ -31,18 +28,8 @@ export default function Header() {
   const handleLogoutClick = () => {
     setIsModalOpen(true);
   };
-  // const handleLogout = async () => {
-  //   try {
-  //     // await logout();
-  //     clearIsAuthenticated();
-  //     closeMenu();
-  //     router.push("/");
-  //   } catch (error) {
-  //     await showError("Log out failed, try again");
-  //   }
-  // };
 
-  //no scroll when a mobile menu is open
+  // ??? no scroll when a mobile menu is open
   useEffect(() => {
     if (isMenuOpen) {
       document.documentElement.style.overflow = "hidden";
@@ -56,6 +43,18 @@ export default function Header() {
       document.body.style.overflow = "";
     };
   }, [isMenuOpen]);
+
+  // ??? LOGIN
+  // const handleLogout = async () => {
+  //   try {
+  //     // await logout();
+  //     clearIsAuthenticated();
+  //     closeMenu();
+  //     router.push("/");
+  //   } catch (error) {
+  //     await showError("Log out failed, try again");
+  //   }
+  // };
 
   return (
     <header className={css.header}>
@@ -87,31 +86,36 @@ export default function Header() {
           </button>
         </div>
       )}
-      {isAuthenticated && user && (
-        <div className={css.userButtons}>
-          <button className={css.userButton}>
-            <svg className={css.icon} aria-hidden="true">
-              <use href="/sprite.svg#search" />
-            </svg>
-          </button>
-          <button className={css.userButton}>
-            <svg className={css.icon} aria-hidden="true">
-              <use href="/sprite.svg#bell" />
-            </svg>
-          </button>
-          <button className={css.headerProfile}>
-            <Image
-              className={css.profileImage}
-              src={user.avatarUrl}
-              alt="userImage"
-              width={32}
-              height={32}
-            />
-            <span>
-              {user.name.charAt(0).toUpperCase() + user.name.slice(1)}
-            </span>
-          </button>
-        </div>
+      {!isAuthenticated ? (
+        <Link href={"/auth/login"}> Login</Link>
+      ) : (
+        isAuthenticated &&
+        user && (
+          <div className={css.userButtons}>
+            <button className={css.userButton}>
+              <svg className={css.icon} aria-hidden="true">
+                <use href="/sprite.svg#search" />
+              </svg>
+            </button>
+            <button className={css.userButton}>
+              <svg className={css.icon} aria-hidden="true">
+                <use href="/sprite.svg#bell" />
+              </svg>
+            </button>
+            <button className={css.headerProfile}>
+              <Image
+                className={css.profileImage}
+                src={user.avatar_url}
+                alt="userImage"
+                width={32}
+                height={32}
+              />
+              <span>
+                {user.username.charAt(0).toUpperCase() + user.username.slice(1)}
+              </span>
+            </button>
+          </div>
+        )
       )}
     </header>
   );
