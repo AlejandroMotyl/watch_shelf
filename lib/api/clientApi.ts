@@ -50,7 +50,7 @@ export const getProfile = async (): Promise<User> => {
 // !!!!!!!!! AUTH
 
 export const checkSession = async () => {
-  const { data } = await api.post<CheckSessionRequest>("/auth/session", {});
+  const { data } = await api.post<CheckSessionRequest>("/auth/refresh", {});
   return data.success;
 };
 

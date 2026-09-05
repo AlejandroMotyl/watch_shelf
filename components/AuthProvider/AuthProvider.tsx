@@ -1,5 +1,5 @@
 "use client";
-import { getProfile } from "@/lib/api/clientApi";
+import { checkSession, getProfile } from "@/lib/api/clientApi";
 import { useAuthStore } from "@/lib/store/authStore/authStore";
 import React, { useEffect } from "react";
 
@@ -15,6 +15,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   );
   useEffect(() => {
     const getUser = async () => {
+      const isAuthenticated = await checkSession();
       if (isAuthenticated) {
         const user = await getProfile();
         if (user) setUser(user);

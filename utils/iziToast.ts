@@ -1,19 +1,21 @@
-import iziToast from "izitoast";
+export async function showError(error: string) {
+  const { default: iziToast } = await import("izitoast");
 
-export function showError(er: string) {
   iziToast.error({
     class: "iziToastError",
     theme: "dark",
     title: "Hey",
-    message: er,
+    message: error,
   });
 }
 
-export function showMessage(msg: string) {
+export async function showMessage(message: string) {
+  const { default: iziToast } = await import("izitoast");
+
   iziToast.show({
     class: "iziToastSuccess",
     theme: "dark",
     title: "Hey",
-    message: msg,
+    message,
   });
 }

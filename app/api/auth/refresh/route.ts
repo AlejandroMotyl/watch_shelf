@@ -1,57 +1,66 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { api } from "@/app/api/api";
 import { parseCookie } from "cookie";
 import { isAxiosError } from "axios";
 import { logErrorResponse } from "../../_utils/utils";
+import { api } from "@/app/api/api";
 
-export async function GET(request: NextRequest) {
+export async function POST() {
+  console.log("🔥 CHECK SESSION ROUTE HIT");
   try {
     const cookieStore = await cookies();
+    const accessToken = cookieStore.get("accessToken")?.value;
     const refreshToken = cookieStore.get("refreshToken")?.value;
-    const next = request.nextUrl.searchParams.get("next") || "/";
+    console.log("accessToken:", accessToken);
+    console.log("refreshToken:", refreshToken);
+    console.log("cookies:", cookieStore.toString());
+
+    if (accessToken) {
+      return NextResponse.json({ success: true });
+    }
 
     if (refreshToken) {
-      const apiRes = await api.get("auth/session", {
-        headers: {
-          Cookie: cookieStore.toString(),
+      const apiRes = await api.post(
+        "/auth/refresh",
+        {},
+        {
+          headers: {
+            Cookie: cookieStore.toString(),
+          },
         },
-      });
+      );
+
       const setCookie = apiRes.headers["set-cookie"];
+
       if (setCookie) {
         const cookieArray = Array.isArray(setCookie) ? setCookie : [setCookie];
-        let accessToken = "";
-        let refreshToken = "";
-        let sessionId = "";
-
         for (const cookieStr of cookieArray) {
           const parsed = parseCookie(cookieStr);
-          if (parsed.accessToken) accessToken = parsed.accessToken;
-          if (parsed.refreshToken) refreshToken = parsed.refreshToken;
-          if (parsed.sessionId) sessionId = parsed.sessionId;
+
+          const options = {
+            expires: parsed.Expires ? new Date(parsed.Expires) : undefined,
+            path: parsed.Path,
+            maxAge: Number(parsed["Max-Age"]),
+          };
+          if (parsed.accessToken)
+            cookieStore.set("accessToken", parsed.accessToken, options);
+
+          if (parsed.refreshToken)
+            cookieStore.set("refreshToken", parsed.refreshToken, options);
+
+          if (parsed.sessionId)
+            cookieStore.set("sessionId", parsed.sessionId, options);
         }
-
-        if (accessToken) cookieStore.set("accessToken", accessToken);
-        if (refreshToken) cookieStore.set("refreshToken", refreshToken);
-        if (sessionId) cookieStore.set("sessionId", sessionId);
-
-        return NextResponse.redirect(new URL(next, request.url), {
-          headers: {
-            "set-cookie": cookieStore.toString(),
-          },
-        });
+        return NextResponse.json({ success: true }, { status: 200 });
       }
     }
-    return NextResponse.redirect(new URL("/auth/login", request.url));
+    return NextResponse.json({ success: false }, { status: 200 });
   } catch (error) {
     if (isAxiosError(error)) {
       logErrorResponse(error.response?.data);
-      return NextResponse.redirect(new URL("/auth/login", request.url));
+      return NextResponse.json({ success: false }, { status: 200 });
     }
     logErrorResponse({ message: (error as Error).message });
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 },
-    );
+    return NextResponse.json({ success: false }, { status: 200 });
   }
 }

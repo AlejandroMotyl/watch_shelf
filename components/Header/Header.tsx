@@ -2,13 +2,11 @@
 
 import Image from "next/image";
 import css from "./Header.module.css";
-import { useState, useEffect } from "react";
-import { createPortal } from "react-dom";
+import { useState, useEffect, useRef } from "react";
 import { useAuthStore } from "@/lib/store/authStore/authStore";
 import { showError } from "@/utils/iziToast";
 import { usePathname } from "next/navigation";
 import { useMediaFilterStore } from "@/lib/store/mediaFilterStore/mediaFilterStore";
-import { useQuery } from "@tanstack/react-query";
 import { logout } from "@/lib/api/clientApi";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -21,16 +19,8 @@ export default function Header() {
   const router = useRouter();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
-
-  // const handleLogoutClick = () => {
-  //   setIsModalOpen(true);
-  // };
-
   // ??? no scroll when a mobile menu is open
   useEffect(() => {
     if (isMenuOpen) {
@@ -45,6 +35,25 @@ export default function Header() {
       document.body.style.overflow = "";
     };
   }, [isMenuOpen]);
+
+  // ?? CLICK OUTSIDE MENU\
+  const userMenuRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // ??? LOGOUT
   const handleLogout = async () => {
@@ -89,11 +98,21 @@ export default function Header() {
         </div>
       )}
       {!isAuthenticated ? (
-        <Link href={"/auth/login"}> Login</Link>
+        <div className={css.authLinksWrapper}>
+          <Link href={"/auth/login"} className={css.authLink}>
+            Login
+          </Link>
+          <Link
+            href={"/auth/register"}
+            className={`${css.authLink} ${css.registerLink}`}
+          >
+            Register
+          </Link>
+        </div>
       ) : (
         isAuthenticated &&
         user && (
-          <div className={css.userButtons}>
+          <div className={css.userButtons} ref={userMenuRef}>
             <button className={css.userButton}>
               <svg className={css.icon} aria-hidden="true">
                 <use href="/sprite.svg#search" />
@@ -111,7 +130,7 @@ export default function Header() {
             >
               <Image
                 className={css.profileImage}
-                src={user.avatar_url}
+                src={user.avatar_url ?? "/images/placeholder.jpeg"}
                 alt="userImage"
                 width={32}
                 height={32}
@@ -121,20 +140,21 @@ export default function Header() {
               </span>
             </button>
 
-            {isModalOpen && (
-              <div className={css.userModal}>
-                <Link href={"/profile"} className={css.profileLink}>
-                  Settings
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  type="button"
-                  className={css.logoutButton}
-                >
-                  Logout
-                </button>
-              </div>
-            )}
+            <div
+              className={`${css.userModal}  ${isMenuOpen ? css.menuOpen : ""}`}
+            >
+              <Link href="/profile" className={css.profileLink}>
+                Settings
+              </Link>
+
+              <button
+                onClick={handleLogout}
+                type="button"
+                className={css.logoutButton}
+              >
+                Logout
+              </button>
+            </div>
           </div>
         )
       )}
