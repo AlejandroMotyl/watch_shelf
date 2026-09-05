@@ -62,6 +62,7 @@
   gap: 24px;
 }
 .userButtons {
+  position: relative;
   font: var(--pop-16px-regular);
   color: var(--white);
   transition: color var(--main-transition);
@@ -83,10 +84,22 @@
   color: var(--white);
   transition: color var(--main-transition);
 }
-.headerProfile:hover {
-  color: var(--accent-hover);
-  cursor: pointer;
-}
+
 .profileImage {
   border-radius: 24px;
+}
+.userModal {
+  position: relative;
+  top: 16px;
+}
+.profileLink {
+}
+
+.logoutButton {
+}
+.headerProfile:hover,
+.profileLink:hover,
+.logoutButton:hover {
+  color: var(--accent-hover);
+  cursor: pointer;
 }

@@ -102,3 +102,7 @@
 .navLink:focus {
   color: var(--accent-hover);
 }
+.error {
+  margin-top: 8px;
+  color: red;
+}

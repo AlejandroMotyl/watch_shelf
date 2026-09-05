@@ -9,14 +9,16 @@ import { showError } from "@/utils/iziToast";
 import { usePathname } from "next/navigation";
 import { useMediaFilterStore } from "@/lib/store/mediaFilterStore/mediaFilterStore";
 import { useQuery } from "@tanstack/react-query";
-import { getProfile } from "@/lib/api/clientApi";
+import { logout } from "@/lib/api/clientApi";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const { filter, setFilter } = useMediaFilterStore();
   const { isAuthenticated, clearIsAuthenticated, user } = useAuthStore();
 
   const pathname = usePathname();
+  const router = useRouter();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -25,9 +27,9 @@ export default function Header() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
 
-  const handleLogoutClick = () => {
-    setIsModalOpen(true);
-  };
+  // const handleLogoutClick = () => {
+  //   setIsModalOpen(true);
+  // };
 
   // ??? no scroll when a mobile menu is open
   useEffect(() => {
@@ -44,17 +46,17 @@ export default function Header() {
     };
   }, [isMenuOpen]);
 
-  // ??? LOGIN
-  // const handleLogout = async () => {
-  //   try {
-  //     // await logout();
-  //     clearIsAuthenticated();
-  //     closeMenu();
-  //     router.push("/");
-  //   } catch (error) {
-  //     await showError("Log out failed, try again");
-  //   }
-  // };
+  // ??? LOGOUT
+  const handleLogout = async () => {
+    try {
+      await logout();
+      clearIsAuthenticated();
+      closeMenu();
+      router.push("/catalogue");
+    } catch {
+      await showError("Log out failed, try again");
+    }
+  };
 
   return (
     <header className={css.header}>
@@ -97,12 +99,16 @@ export default function Header() {
                 <use href="/sprite.svg#search" />
               </svg>
             </button>
-            <button className={css.userButton}>
+            {/* <button className={css.userButton}>
               <svg className={css.icon} aria-hidden="true">
                 <use href="/sprite.svg#bell" />
               </svg>
-            </button>
-            <button className={css.headerProfile}>
+            </button> */}
+            <button
+              className={css.headerProfile}
+              type="button"
+              onClick={toggleMenu}
+            >
               <Image
                 className={css.profileImage}
                 src={user.avatar_url}
@@ -114,6 +120,21 @@ export default function Header() {
                 {user.username.charAt(0).toUpperCase() + user.username.slice(1)}
               </span>
             </button>
+
+            {isModalOpen && (
+              <div className={css.userModal}>
+                <Link href={"/profile"} className={css.profileLink}>
+                  Settings
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  type="button"
+                  className={css.logoutButton}
+                >
+                  Logout
+                </button>
+              </div>
+            )}
           </div>
         )
       )}
