@@ -62,7 +62,7 @@
   color: var(--text-secondary);
 }
 
-.avatarRow {
+.avatarForm {
   display: flex;
   align-items: center;
   gap: 20px;
@@ -95,7 +95,8 @@
   gap: 12px;
 }
 
-.uploadButton {
+.uploadButton,
+.saveButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -115,8 +116,14 @@
   transition: background var(--main-transition);
 }
 
-.uploadButton:hover {
+.uploadButton:hover,
+.saveButton:hover {
   background: var(--accent-hover);
+}
+
+.error {
+  margin-top: 8px;
+  color: red;
 }
 
 .fileInput {

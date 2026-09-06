@@ -47,6 +47,18 @@ export const getProfile = async (): Promise<User> => {
   return data;
 };
 
+export const updateAvatar = async (file: File): Promise<{ user: User }> => {
+  const formData = new FormData();
+  formData.append("avatar", file);
+
+  const { data } = await api.patch<{ user: User }>("/profile", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return data;
+};
 // !!!!!!!!! AUTH
 
 export const checkSession = async () => {

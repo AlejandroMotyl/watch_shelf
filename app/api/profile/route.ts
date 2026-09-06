@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { api } from "@/app/api/api";
 import { cookies } from "next/headers";
 import { isAxiosError } from "axios";
@@ -32,12 +32,14 @@ export async function GET() {
   }
 }
 
-export async function PATCH(request: Request) {
+export async function PATCH(request: NextRequest) {
+  console.log("hit patch");
+
   try {
     const cookieStore = await cookies();
-    const body = await request.json();
+    const avatar = await request.formData();
 
-    const res = await api.patch("/profile", body, {
+    const res = await api.patch("/profile", avatar, {
       headers: {
         Cookie: cookieStore.toString(),
       },
