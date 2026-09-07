@@ -32,12 +32,10 @@ export async function GET() {
   }
 }
 
-export async function PATCH(request: NextRequest) {
-  console.log("hit patch");
-
+export async function PATCH(req: NextRequest) {
   try {
     const cookieStore = await cookies();
-    const avatar = await request.formData();
+    const avatar = await req.formData();
 
     const res = await api.patch("/profile", avatar, {
       headers: {

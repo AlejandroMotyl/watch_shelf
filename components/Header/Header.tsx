@@ -136,7 +136,8 @@ export default function Header() {
                 height={32}
               />
               <span>
-                {user.username.charAt(0).toUpperCase() + user.username.slice(1)}
+                {user.username?.charAt(0).toUpperCase() +
+                  user.username?.slice(1) || "User"}
               </span>
             </button>
 

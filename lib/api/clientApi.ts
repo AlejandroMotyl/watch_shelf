@@ -12,6 +12,10 @@ export type GetMediaByIdResponse = {
   media: TVId | MovieId;
   staff: MediaStaff;
 };
+type ChangePasswordData = {
+  currentPassword: string;
+  newPassword: string;
+};
 
 // !!!!!!!!! MEDIA
 export const getTrending = async (
@@ -59,6 +63,23 @@ export const updateAvatar = async (file: File): Promise<{ user: User }> => {
 
   return data;
 };
+
+export const updateUsername = async (
+  username: string,
+): Promise<{ user: User }> => {
+  const { data } = await api.patch<{ user: User }>("/profile/username", {
+    username,
+  });
+
+  return data;
+};
+
+export const updatePassword = async (
+  data: ChangePasswordData,
+): Promise<void> => {
+  await api.patch("/profile/password", data);
+};
+
 // !!!!!!!!! AUTH
 
 export const checkSession = async () => {

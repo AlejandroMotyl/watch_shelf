@@ -1,0 +1,88 @@
+/* UserAvatarForm styles */
+.avatarForm {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: var(--accent-primary);
+}
+
+.avatarText {
+  color: var(--white);
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.avatarActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.uploadButton,
+.saveButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px 16px;
+
+  border-radius: 10px;
+
+  background: var(--accent-primary);
+  color: var(--white);
+
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition: background var(--main-transition);
+}
+
+.uploadButton:hover,
+.saveButton:hover {
+  background: var(--accent-hover);
+}
+
+.error {
+  margin-top: 8px;
+  color: red;
+}
+
+.fileInput {
+  display: none;
+}
+
+.removeButton {
+  padding: 10px 16px;
+
+  border: 1px solid var(--accent-primary);
+  border-radius: 10px;
+
+  background: transparent;
+  color: var(--white);
+
+  cursor: pointer;
+
+  transition:
+    background var(--main-transition),
+    color var(--main-transition);
+}
+
+.removeButton:hover {
+  background: var(--accent-primary);
+}
