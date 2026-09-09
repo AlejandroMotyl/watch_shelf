@@ -69,7 +69,7 @@ export default function Trending({ media }: TrendingProps) {
 `,
               }}
             >
-              <FavButton size={"small"} />
+              <FavButton size={"small"} id={media.id} type={media.media_type} />
               <Link
                 className={css.trendingLink}
                 href={`/catalogue/${media.media_type}/${media.id}`}

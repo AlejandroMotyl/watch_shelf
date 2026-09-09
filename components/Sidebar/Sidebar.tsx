@@ -1,9 +1,26 @@
 import Link from "next/link";
 import css from "./Sidebar.module.css";
 import { useAuthStore } from "@/lib/store/authStore/authStore";
+import { logout } from "@/lib/api/clientApi";
+import { showError } from "@/utils/iziToast";
+import { useRouter } from "next/navigation";
 
 export default function Sidebar() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const clearIsAuthenticated = useAuthStore(
+    (state) => state.clearIsAuthenticated,
+  );
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      clearIsAuthenticated();
+      router.push("/catalogue");
+    } catch {
+      await showError("Log out failed, try again");
+    }
+  };
 
   return (
     <aside className={css.sidebarWrapper}>
@@ -101,7 +118,11 @@ export default function Sidebar() {
           </li> */}
 
               <li className={css.navItem}>
-                <button type="button" className={css.navLink}>
+                <button
+                  type="button"
+                  className={css.navLink}
+                  onClick={handleLogout}
+                >
                   <svg className={css.icon} aria-hidden="true">
                     <use href="/sprite.svg#log-out" />
                   </svg>

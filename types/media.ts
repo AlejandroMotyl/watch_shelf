@@ -1,3 +1,4 @@
+// MEDIA
 export interface Media {
   adult: boolean;
   backdrop_path: string | null;
@@ -26,6 +27,8 @@ export interface Movie extends Media {
   release_date: string;
 }
 
+// MEDIA BY ID
+
 export type MediaIdBase = {
   adult: boolean;
   backdrop_path: string | null;
@@ -51,7 +54,7 @@ export interface MovieId extends MediaIdBase {
 
   belongs_to_collection: unknown | null;
   budget: number;
-  imdb_id: string | null;
+  tmdb_id: string | null;
   original_title: string;
   release_date: string;
   revenue: number;
@@ -75,10 +78,15 @@ export interface ApiResponse {
   total_pages: number;
   total_results: number;
 }
+
+//  GENRE
+
 export type Genre = {
   id: number;
   name: string;
 };
+
+// CREDITS
 
 export type ProductionCompany = {
   id: number;
@@ -122,4 +130,16 @@ export type MediaStaff = {
   directors: CrewMember[];
   writers: CrewMember[];
   stars: CastMember[];
+};
+
+// FAVORITE
+export type Favorite = {
+  id: number;
+  tmdb_id: number;
+  media_type: "movie" | "tv";
+  title: string;
+  poster_path: string | null;
+  release_date: string | null;
+  genres: number[];
+  created_at: string;
 };

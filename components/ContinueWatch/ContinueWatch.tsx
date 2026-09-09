@@ -22,7 +22,7 @@ export default function ContinueWatch() {
               key={movie.id}
               style={{ backgroundImage: `url(${movie.image})` }}
             >
-              <FavButton size="small" />
+              {/* <FavButton size="small" /> */}
               <div className={css.titleWrapper}>
                 <h3 className={css.movieTitle}>{movie.name}</h3>
                 <p className={css.description}>

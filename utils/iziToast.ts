@@ -1,11 +1,15 @@
-export async function showError(error: string) {
+export async function showError(message: string) {
   const { default: iziToast } = await import("izitoast");
 
   iziToast.error({
     class: "iziToastError",
     theme: "dark",
-    title: "Hey",
-    message: error,
+    title: "Something went wrong",
+    message,
+    position: "topRight",
+    timeout: 4000,
+    close: true,
+    progressBar: true,
   });
 }
 
@@ -15,7 +19,11 @@ export async function showMessage(message: string) {
   iziToast.show({
     class: "iziToastSuccess",
     theme: "dark",
-    title: "Hey",
+    title: "Success",
     message,
+    position: "topRight",
+    timeout: 3000,
+    close: true,
+    progressBar: true,
   });
 }

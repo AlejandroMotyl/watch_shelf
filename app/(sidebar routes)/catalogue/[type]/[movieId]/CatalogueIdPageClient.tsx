@@ -8,7 +8,7 @@ import { useState } from "react";
 import { getPosterUrl } from "@/lib/services/mediaPosters";
 
 interface CatalogueIdPageClientProps {
-  type: string;
+  type: "movie" | "tv";
   id: string;
 }
 
@@ -112,7 +112,7 @@ export default function CatalogueIdPageClient({
               <button className={css.primaryButton} type="button">
                 Watch trailer
               </button>
-              <FavButton size="big" />
+              <FavButton size="big" id={media.id} type={media.media_type} />
               <div className={css.userRating}>
                 <span className={css.ratingLabel}>Your rating</span>
                 {/* TO do:     REQUEST TO CHANGE THE RATING HERE, TOGETHER WITH POP UP.

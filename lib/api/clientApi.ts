@@ -1,4 +1,10 @@
-import { ApiResponse, MediaStaff, TVId, MovieId } from "@/types/media";
+import {
+  ApiResponse,
+  MediaStaff,
+  TVId,
+  MovieId,
+  Favorite,
+} from "@/types/media";
 import { api } from "./api";
 import { filterParams } from "@/types/filter";
 import { MediaReviewsResponse } from "@/types/reviews";
@@ -26,7 +32,7 @@ export const getTrending = async (
 };
 
 export const getMediaById = async (
-  type: string,
+  type: "movie" | "tv",
   id: string,
 ): Promise<GetMediaByIdResponse> => {
   const { data } = await api.get<GetMediaByIdResponse>(
@@ -80,6 +86,37 @@ export const updatePassword = async (
   await api.patch("/profile/password", data);
 };
 
+// !!!!!!!!! FAVORITES
+type FavoritesResponse = {
+  favorites: Favorite[];
+};
+
+export const getFavorites = async (): Promise<Favorite[]> => {
+  const { data } = await api.get<FavoritesResponse>("/profile/favorites");
+
+  return data.favorites;
+};
+export const addFavorite = async ({
+  type,
+  id,
+}: {
+  type: "movie" | "tv";
+  id: number;
+}): Promise<Favorite> => {
+  const { data } = await api.post<Favorite>("/profile/favorites", {
+    type,
+    id,
+  });
+
+  return data;
+};
+
+export const removeFavorite = async (
+  type: "movie" | "tv",
+  id: string,
+): Promise<void> => {
+  await api.delete(`/profile/favorites/${type}/${id}`);
+};
 // !!!!!!!!! AUTH
 
 export const checkSession = async () => {

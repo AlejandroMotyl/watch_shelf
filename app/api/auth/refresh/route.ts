@@ -6,15 +6,10 @@ import { logErrorResponse } from "../../_utils/utils";
 import { api } from "@/app/api/api";
 
 export async function POST() {
-  console.log("🔥 CHECK SESSION ROUTE HIT");
   try {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken")?.value;
     const refreshToken = cookieStore.get("refreshToken")?.value;
-    console.log("accessToken:", accessToken);
-    console.log("refreshToken:", refreshToken);
-    console.log("cookies:", cookieStore.toString());
-
     if (accessToken) {
       return NextResponse.json({ success: true });
     }
