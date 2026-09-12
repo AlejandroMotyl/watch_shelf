@@ -1,17 +1,15 @@
 /* page styles */
+
 .reviewsPage {
   width: 100%;
   min-height: 100%;
-
   display: flex;
-
   padding-top: 58px;
   padding-bottom: 16px;
 }
 
 .reviewsSection {
   width: 100%;
-
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -25,25 +23,23 @@
 
 .pageTitle {
   margin: 0;
-
   color: var(--white);
   font: var(--pop-20px-semibold);
 }
 
 .pageDescription {
   margin: 0;
-
   color: var(--text-secondary);
   font: var(--pop-14px-regular);
 }
+
+/* Masonry */
+
 .reviewList {
   columns: 3;
-
   column-gap: 24px;
-
   margin: 0;
   padding: 0;
-
   list-style: none;
 }
 
@@ -51,6 +47,7 @@
   max-width: 100%;
   break-inside: avoid;
   margin-bottom: 24px;
+
   display: flex;
   flex-direction: column;
 
@@ -71,16 +68,16 @@
   border-color: var(--accent-primary);
 }
 
+/* Poster */
+
 .mediaImageWrapper {
   width: 100%;
-
   overflow: hidden;
 }
 
 .mediaImage {
   width: 100%;
   height: 100%;
-
   display: block;
 
   object-fit: cover;
@@ -92,11 +89,12 @@
   transform: scale(1.03);
 }
 
+/* Content */
+
 .reviewContent {
   display: flex;
   flex-direction: column;
   gap: 16px;
-
   padding: 20px;
 }
 
@@ -106,11 +104,15 @@
   align-items: center;
   gap: 5px;
 }
+
 .mediaText {
   max-width: 183px;
+  min-width: 0;
 }
+
 .mediaTitle {
   margin: 0;
+
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -130,18 +132,20 @@
   margin: 0 5px;
 }
 
+/* Review */
+
 .reviewBox {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 500px;
 
+  max-height: 500px;
   padding: 14px;
 
   border-radius: 12px;
+  border: 1px solid var(--gray);
 
   background: var(--glass-bg);
-  border: 1px solid var(--gray);
 
   overflow-y: auto;
 
@@ -153,6 +157,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
 
   flex-shrink: 0;
 }
@@ -177,11 +182,16 @@
 
 .reviewAuthor {
   flex-shrink: 0;
+
   color: var(--black);
   font: var(--pop-14px-semibold);
 }
 
+/* Media link */
+
 .mediaLink {
+  flex-shrink: 0;
+
   align-self: flex-start;
 
   padding: 10px 16px;
@@ -198,4 +208,52 @@
 
 .mediaLink:hover {
   background: var(--accent-hover);
+}
+
+/* Load more */
+
+.loadMoreWrapper {
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+
+  padding-top: 4px;
+  padding-bottom: 8px;
+}
+
+.loadMoreButton {
+  min-width: 260px;
+  min-height: 60px;
+
+  padding: 12px 24px;
+
+  border: 1px solid var(--accent-primary);
+  border-radius: 10px;
+
+  background: var(--accent-primary);
+  color: var(--white);
+
+  font: var(--pop-14px-semibold);
+
+  cursor: pointer;
+
+  transition:
+    background var(--main-transition),
+    transform var(--main-transition),
+    opacity var(--main-transition);
+}
+
+.loadMoreButton:hover:not(:disabled) {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+.loadMoreButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.loadMoreButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

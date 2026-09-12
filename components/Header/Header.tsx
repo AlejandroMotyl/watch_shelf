@@ -21,20 +21,6 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
-  // ??? no scroll when a mobile menu is open
-  useEffect(() => {
-    if (isMenuOpen) {
-      document.documentElement.style.overflow = "hidden";
-      document.body.style.overflow = "hidden";
-    } else {
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
-    };
-  }, [isMenuOpen]);
 
   // ?? CLICK OUTSIDE MENU\
   const userMenuRef = useRef<HTMLDivElement>(null);
@@ -87,14 +73,14 @@ export default function Header() {
           >
             Series
           </button>
-          <button
+          {/* <button
             className={`${css.filterButton} ${filter === "people" ? css.active : ""}`}
             type="button"
             onClick={() => setFilter("people")}
             disabled={filter === "people"}
           >
             People
-          </button>
+          </button> */}
         </div>
       )}
       {!isAuthenticated ? (
@@ -144,9 +130,16 @@ export default function Header() {
             <div
               className={`${css.userModal}  ${isMenuOpen ? css.menuOpen : ""}`}
             >
-              <Link href="/profile" className={css.profileLink}>
+              <button
+                type="button"
+                onClick={() => {
+                  closeMenu();
+                  router.push("/profile");
+                }}
+                className={css.profileLink}
+              >
                 Settings
-              </Link>
+              </button>
 
               <button
                 onClick={handleLogout}

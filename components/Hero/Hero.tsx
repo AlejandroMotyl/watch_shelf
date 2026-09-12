@@ -45,7 +45,7 @@ export default function Hero({ media }: HeroProps) {
         >
           Watch now
         </Link>
-        <FavButton size="big" />
+        <FavButton size="big" id={String(media.id)} type={media.media_type} />
       </div>
     </section>
   );

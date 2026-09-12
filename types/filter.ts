@@ -1,1 +1,2 @@
-export type filterParams = "movie" | "tv" | "people";
+export type filterParams = "movie" | "tv";
+// | "people";

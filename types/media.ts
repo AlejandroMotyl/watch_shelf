@@ -135,7 +135,7 @@ export type MediaStaff = {
 // FAVORITE
 export type Favorite = {
   id: number;
-  tmdb_id: number;
+  tmdb_id: string;
   media_type: "movie" | "tv";
   title: string;
   poster_path: string | null;

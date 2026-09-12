@@ -10,7 +10,6 @@ type Params = {
     movieId: string;
   }>;
 };
-
 export async function DELETE(request: Request, { params }: Params) {
   try {
     const { movieId, type } = await params;
@@ -22,20 +21,34 @@ export async function DELETE(request: Request, { params }: Params) {
 
     const res = await api.delete(`/profile/favorites/${type}/${movieId}`, {
       headers: {
-        Cookie: `accessToken=${accessToken}; refreshToken=${refreshToken}; sessionId=${sessionId}; `,
+        Cookie: `accessToken=${accessToken}; refreshToken=${refreshToken}; sessionId=${sessionId};`,
       },
     });
-    return NextResponse.json(res.data, { status: res.status });
+
+    if (res.status === 204) {
+      return new NextResponse(null, { status: 204 });
+    }
+
+    return NextResponse.json(res.data, {
+      status: res.status,
+    });
   } catch (error) {
     if (isAxiosError(error)) {
       logErrorResponse(error.response?.data);
+
       return NextResponse.json(
-        { error: error.message, response: error.response?.data },
+        {
+          error: error.message,
+          response: error.response?.data,
+        },
         { status: error.response?.status ?? 500 },
       );
     }
 
-    logErrorResponse({ message: (error as Error).message });
+    logErrorResponse({
+      message: (error as Error).message,
+    });
+
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },

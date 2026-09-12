@@ -3,10 +3,7 @@ import FavButton from "../favButton/favButton";
 import css from "./Trending.module.css";
 import { getPosterUrl } from "@/lib/services/mediaPosters";
 
-import {
-  OverlayScrollbarsComponent,
-  OverlayScrollbarsComponentRef,
-} from "overlayscrollbars-react";
+import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import Link from "next/link";
 import { useRef } from "react";
 import { TMDB_MOVIE_GENRES } from "@/lib/constants/genreIds";
@@ -16,7 +13,6 @@ interface TrendingProps {
 }
 
 export default function Trending({ media }: TrendingProps) {
-  const osRef = useRef<OverlayScrollbarsComponentRef>(null);
   const wheelHandlerRef = useRef<((e: WheelEvent) => void) | null>(null);
   return (
     <section className={css.trendingSection}>
@@ -69,7 +65,11 @@ export default function Trending({ media }: TrendingProps) {
 `,
               }}
             >
-              <FavButton size={"small"} id={media.id} type={media.media_type} />
+              <FavButton
+                size={"small"}
+                id={String(media.id)}
+                type={media.media_type}
+              />
               <Link
                 className={css.trendingLink}
                 href={`/catalogue/${media.media_type}/${media.id}`}
@@ -80,8 +80,8 @@ export default function Trending({ media }: TrendingProps) {
                   </h3>
                   <p className={css.description}>
                     {media.media_type === "movie"
-                      ? media.release_date
-                      : media.first_air_date}{" "}
+                      ? media.release_date.slice(0, 4)
+                      : media.first_air_date.slice(0, 4)}{" "}
                     |{" "}
                     {media.genre_ids
                       .map((id) => TMDB_MOVIE_GENRES[id])

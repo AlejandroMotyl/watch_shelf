@@ -1,27 +1,43 @@
 "use client";
+
 import Link from "next/link";
 import css from "./page.module.css";
 import Image from "next/image";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getReviews } from "@/lib/api/clientApi";
 import { getPosterUrl } from "@/lib/services/mediaPosters";
 import { useMediaFilterStore } from "@/lib/store/mediaFilterStore/mediaFilterStore";
 
 export default function ReviewsPageClient() {
   const filter = useMediaFilterStore((store) => store.filter);
-  const { data, isLoading } = useQuery({
-    queryKey: ["reviews", filter],
-    queryFn: () => getReviews(filter),
-    refetchOnMount: false,
-  });
+
+  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
+    useInfiniteQuery({
+      queryKey: ["reviews", filter],
+
+      queryFn: ({ pageParam }) => getReviews(filter, pageParam),
+
+      initialPageParam: 1,
+
+      getNextPageParam: (lastPage) => {
+        if (lastPage.page >= lastPage.total_pages) {
+          return undefined;
+        }
+
+        return lastPage.page + 1;
+      },
+    });
+
+  const reviews = data?.pages.flatMap((page) => page.results) ?? [];
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!data?.results?.length) {
+  if (!reviews.length) {
     return <div>No medias found.</div>;
   }
-  const reviews = data.results;
+
   return (
     <main className={css.reviewsPage}>
       <section className={css.reviewsSection}>
@@ -36,7 +52,7 @@ export default function ReviewsPageClient() {
                 {media.poster ? (
                   <Image
                     className={css.mediaImage}
-                    src={`${getPosterUrl(media.poster, "w1280")}`}
+                    src={getPosterUrl(media.poster, "w1280")!}
                     alt={`${media.title} poster`}
                     width={400}
                     height={600}
@@ -53,9 +69,11 @@ export default function ReviewsPageClient() {
                     <h2 className={css.mediaTitle}>{media.title}</h2>
 
                     <p className={css.mediaMeta}>
-                      {media.year} <span className={css.metaSeparator}>•</span>
+                      {media.year}
+                      <span className={css.metaSeparator}>•</span>
                     </p>
                   </div>
+
                   <Link
                     className={css.mediaLink}
                     href={`/catalogue/${filter}/${media.id}`}
@@ -85,9 +103,20 @@ export default function ReviewsPageClient() {
             </li>
           ))}
         </ul>
+
+        {hasNextPage && (
+          <div className={css.loadMoreWrapper}>
+            <button
+              type="button"
+              className={css.loadMoreButton}
+              onClick={() => fetchNextPage()}
+              disabled={isFetchingNextPage}
+            >
+              {isFetchingNextPage ? "Loading..." : "Load more"}
+            </button>
+          </div>
+        )}
       </section>
     </main>
   );
 }
-
-// !!!! ADD PAGINATION

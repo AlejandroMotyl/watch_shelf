@@ -9,6 +9,13 @@ import { api } from "./api";
 import { filterParams } from "@/types/filter";
 import { MediaReviewsResponse } from "@/types/reviews";
 import { LoginData, RegisterData, User } from "@/types/user";
+import {
+  GetRatingResponse,
+  Rating,
+  SaveRatingResponse,
+  SaveRatingVariables,
+} from "@/types/rating";
+import { WatchHistory, WatchHistoryResponse } from "@/types/history";
 
 interface CheckSessionRequest {
   success: boolean;
@@ -41,11 +48,14 @@ export const getMediaById = async (
 
   return data;
 };
-export const getReviews = async (
-  filter: filterParams,
-): Promise<MediaReviewsResponse> => {
-  const { data } = await api.get<MediaReviewsResponse>(`/reviews/${filter}`);
 
+export const getReviews = async (
+  type: "movie" | "tv",
+  page: number = 1,
+): Promise<MediaReviewsResponse> => {
+  const { data } = await api.get<MediaReviewsResponse>(`/reviews/${type}/`, {
+    params: { page },
+  });
   return data;
 };
 
@@ -101,7 +111,7 @@ export const addFavorite = async ({
   id,
 }: {
   type: "movie" | "tv";
-  id: number;
+  id: string;
 }): Promise<Favorite> => {
   const { data } = await api.post<Favorite>("/profile/favorites", {
     type,
@@ -111,12 +121,84 @@ export const addFavorite = async ({
   return data;
 };
 
-export const removeFavorite = async (
-  type: "movie" | "tv",
-  id: string,
-): Promise<void> => {
+export const removeFavorite = async ({
+  type,
+  id,
+}: {
+  type: "movie" | "tv";
+  id: string;
+}): Promise<void> => {
   await api.delete(`/profile/favorites/${type}/${id}`);
 };
+
+// !!!!!!!!! RATING
+
+export const saveRating = async ({
+  tmdbId,
+  type,
+  rating,
+}: SaveRatingVariables): Promise<Rating> => {
+  const { data } = await api.post<SaveRatingResponse>("/profile/ratings", {
+    tmdbId,
+    type,
+    rating,
+  });
+  return data.rating;
+};
+export const getRating = async (
+  type: "movie" | "tv",
+  tmdbId: number,
+): Promise<Rating | null> => {
+  const { data } = await api.get<GetRatingResponse>(
+    `/profile/ratings/${type}/${tmdbId}`,
+  );
+  return data.rating;
+};
+
+// !!!!!!!!! HISTORY
+
+export const getWatchHistory = async (
+  page = 1,
+  limit = 12,
+): Promise<WatchHistoryResponse> => {
+  const { data } = await api.get<WatchHistoryResponse>("/profile/history", {
+    params: {
+      page,
+      limit,
+    },
+  });
+
+  return data;
+};
+
+type SaveWatchHistoryVariables = {
+  tmdbId: number;
+  type: "movie" | "tv";
+  progressSeconds: number;
+  durationSeconds: number | null;
+};
+type SaveWatchHistoryResponse = {
+  history: WatchHistory;
+};
+export const saveWatchHistory = async ({
+  tmdbId,
+  type,
+  progressSeconds,
+  durationSeconds,
+}: SaveWatchHistoryVariables): Promise<WatchHistory> => {
+  const { data } = await api.post<SaveWatchHistoryResponse>(
+    "/profile/history",
+    {
+      tmdbId,
+      type,
+      progressSeconds,
+      durationSeconds,
+    },
+  );
+
+  return data.history;
+};
+
 // !!!!!!!!! AUTH
 
 export const checkSession = async () => {

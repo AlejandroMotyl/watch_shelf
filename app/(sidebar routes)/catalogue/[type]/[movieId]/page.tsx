@@ -2,7 +2,7 @@ import CatalogueIdPageClient from "./CatalogueIdPageClient";
 
 type CatalogueIdPageProps = {
   params: Promise<{
-    type: string;
+    type: "movie" | "tv";
     movieId: string;
   }>;
 };
