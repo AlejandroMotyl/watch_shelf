@@ -6,6 +6,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { getFavorites, getWatchHistory } from "@/lib/api/clientApi";
 import { getPosterUrl } from "@/lib/services/mediaPosters";
 import { TMDB_MOVIE_GENRES } from "@/lib/constants/genreIds";
+import Link from "next/link";
 
 interface CollectionPageProps {
   type: "Reviews" | "History" | "Favorites";
@@ -43,7 +44,8 @@ export default function CollectionPage({ type }: CollectionPageProps) {
     enabled: isHistory,
   });
 
-  if (favoritesLoading || historyLoading) {
+  // Only show loading state for the active collection
+  if ((isFavorites && favoritesLoading) || (isHistory && historyLoading)) {
     return <p>Loading...</p>;
   }
 
@@ -93,16 +95,21 @@ export default function CollectionPage({ type }: CollectionPageProps) {
                   id={movie.tmdb_id}
                 />
 
-                <div className={css.titleWrapper}>
-                  <h3 className={css.movieTitle}>{movie.title}</h3>
+                <Link
+                  href={`/catalogue/${movie.media_type}/${movie.tmdb_id}`}
+                  className={css.movieLink}
+                >
+                  <div className={css.titleWrapper}>
+                    <h3 className={css.movieTitle}>{movie.title}</h3>
 
-                  <p className={css.description}>
-                    {movie.release_date?.slice(0, 4)} |{" "}
-                    {movie.genres
-                      .map((id) => TMDB_MOVIE_GENRES[id])
-                      .join(" • ")}
-                  </p>
-                </div>
+                    <p className={css.description}>
+                      {movie.release_date?.slice(0, 4)} |{" "}
+                      {movie.genres
+                        .map((id) => TMDB_MOVIE_GENRES[id])
+                        .join(" • ")}
+                    </p>
+                  </div>
+                </Link>
               </li>
             ))}
           </ul>
@@ -146,37 +153,48 @@ export default function CollectionPage({ type }: CollectionPageProps) {
                     )})`,
                   }}
                 >
-                  <div className={css.titleWrapper}>
-                    <h3 className={css.movieTitle}>{item.title}</h3>
+                  <FavButton
+                    size="small"
+                    type={item.media_type}
+                    id={String(item.tmdb_id)}
+                  />
 
-                    <p className={css.description}>
-                      {item.release_date?.slice(0, 4)} |{" "}
-                      {item.genres
-                        .map((id) => TMDB_MOVIE_GENRES[id])
-                        .join(" • ")}
-                    </p>
+                  <Link
+                    href={`/catalogue/${item.media_type}/${item.tmdb_id}`}
+                    className={css.movieLink}
+                  >
+                    <div className={css.titleWrapper}>
+                      <h3 className={css.movieTitle}>{item.title}</h3>
 
-                    <p className={css.watchedDate}>
-                      Watched {new Date(item.watched_at).toLocaleDateString()}
-                    </p>
+                      <p className={css.description}>
+                        {item.release_date?.slice(0, 4)} |{" "}
+                        {item.genres
+                          .map((id) => TMDB_MOVIE_GENRES[id])
+                          .join(" • ")}
+                      </p>
 
-                    {item.duration_seconds && (
-                      <div className={css.progressWrapper}>
-                        <div className={css.progressBar}>
-                          <div
-                            className={css.progress}
-                            style={{
-                              width: `${progress}%`,
-                            }}
-                          />
+                      <p className={css.watchedDate}>
+                        Watched {new Date(item.watched_at).toLocaleDateString()}
+                      </p>
+
+                      {item.duration_seconds && (
+                        <div className={css.progressWrapper}>
+                          <div className={css.progressBar}>
+                            <div
+                              className={css.progress}
+                              style={{
+                                width: `${progress}%`,
+                              }}
+                            />
+                          </div>
+
+                          <span className={css.progressText}>
+                            {Math.round(progress)}%
+                          </span>
                         </div>
-
-                        <span className={css.progressText}>
-                          {Math.round(progress)}%
-                        </span>
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
+                  </Link>
                 </li>
               );
             })}

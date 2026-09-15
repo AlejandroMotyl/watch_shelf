@@ -4,6 +4,8 @@ import {
   TVId,
   MovieId,
   Favorite,
+  MediaTrailer,
+  MediaTrailerResponse,
 } from "@/types/media";
 import { api } from "./api";
 import { filterParams } from "@/types/filter";
@@ -59,6 +61,16 @@ export const getReviews = async (
   return data;
 };
 
+export const getMediaTrailerById = async (
+  type: "movie" | "tv",
+  id: string,
+): Promise<MediaTrailer> => {
+  const { data } = await api.get<MediaTrailerResponse>(
+    `/catalogue/${type}/${id}/trailer`,
+  );
+
+  return data.trailer;
+};
 // !!!!!!!!! PROFILE
 
 export const getProfile = async (): Promise<User> => {

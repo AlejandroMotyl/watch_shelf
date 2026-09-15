@@ -2,11 +2,17 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import css from "./page.module.css";
-import { getMediaById, getRating, saveRating } from "@/lib/api/clientApi";
+import {
+  getMediaById,
+  getMediaTrailerById,
+  getRating,
+  saveRating,
+} from "@/lib/api/clientApi";
 import Image from "next/image";
 import FavButton from "@/components/favButton/favButton";
 import { useState } from "react";
 import { getPosterUrl } from "@/lib/services/mediaPosters";
+import TrailerPlayer from "@/components/TrailerPlayer.tsx/TrailerPlayer";
 
 interface CatalogueIdPageClientProps {
   type: "movie" | "tv";
@@ -19,6 +25,7 @@ export default function CatalogueIdPageClient({
 }: CatalogueIdPageClientProps) {
   const queryClient = useQueryClient();
 
+  const [isTrailerOpen, setIsTrailerOpen] = useState(false);
   const [hoverRating, setHoverRating] = useState<number | null>(null);
 
   // MEDIA
@@ -27,6 +34,17 @@ export default function CatalogueIdPageClient({
     queryFn: () => getMediaById(type, id),
     enabled: !!type && !!id,
     refetchOnMount: false,
+  });
+
+  // TRAILER
+  const {
+    data: trailer,
+    isLoading: isTrailerLoading,
+    refetch: fetchTrailer,
+  } = useQuery({
+    queryKey: ["trailer", type, id],
+    queryFn: () => getMediaTrailerById(type, id),
+    enabled: false,
   });
 
   // USER'S RATING
@@ -52,6 +70,14 @@ export default function CatalogueIdPageClient({
 
   const media = data?.media;
   const staff = data?.staff;
+
+  const handleWatchTrailer = async () => {
+    const result = await fetchTrailer();
+
+    if (result.data) {
+      setIsTrailerOpen(true);
+    }
+  };
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -150,8 +176,13 @@ export default function CatalogueIdPageClient({
             <p className={css.mediaDescription}>{media.overview}</p>
 
             <div className={css.mediaActions}>
-              <button className={css.primaryButton} type="button">
-                Watch trailer
+              <button
+                className={css.primaryButton}
+                type="button"
+                onClick={handleWatchTrailer}
+                disabled={isTrailerLoading}
+              >
+                {isTrailerLoading ? "Loading..." : "Watch trailer"}
               </button>
 
               <FavButton
@@ -286,6 +317,15 @@ export default function CatalogueIdPageClient({
           </div>
         </section>
       </section>
+      {isTrailerOpen && trailer && (
+        <TrailerPlayer
+          videoKey={trailer.key}
+          title={trailer.name}
+          tmdbId={media.id}
+          type={media.media_type}
+          onClose={() => setIsTrailerOpen(false)}
+        />
+      )}
     </main>
   );
 }

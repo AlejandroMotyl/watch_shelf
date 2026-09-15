@@ -79,6 +79,15 @@ export interface ApiResponse {
   total_results: number;
 }
 
+export type MediaTrailer = {
+  key: string;
+  name: string;
+};
+
+export type MediaTrailerResponse = {
+  trailer: MediaTrailer;
+};
+
 //  GENRE
 
 export type Genre = {
