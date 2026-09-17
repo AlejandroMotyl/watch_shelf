@@ -6,6 +6,7 @@ import {
   getMediaById,
   getMediaTrailerById,
   getRating,
+  getWatchHistoryItem,
   saveRating,
 } from "@/lib/api/clientApi";
 import Image from "next/image";
@@ -13,6 +14,8 @@ import FavButton from "@/components/favButton/favButton";
 import { useState } from "react";
 import { getPosterUrl } from "@/lib/services/mediaPosters";
 import TrailerPlayer from "@/components/TrailerPlayer.tsx/TrailerPlayer";
+import { useAuthStore } from "@/lib/store/authStore/authStore";
+import { showError } from "@/utils/iziToast";
 
 interface CatalogueIdPageClientProps {
   type: "movie" | "tv";
@@ -25,6 +28,8 @@ export default function CatalogueIdPageClient({
 }: CatalogueIdPageClientProps) {
   const queryClient = useQueryClient();
 
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
   const [isTrailerOpen, setIsTrailerOpen] = useState(false);
   const [hoverRating, setHoverRating] = useState<number | null>(null);
 
@@ -36,6 +41,13 @@ export default function CatalogueIdPageClient({
     refetchOnMount: false,
   });
 
+  // USER'S WATCH HISTORY
+  const { data: watchHistory } = useQuery({
+    queryKey: ["history", type, id],
+    queryFn: () => getWatchHistoryItem(type, Number(id)),
+    enabled: !!type && !!id && !!isAuthenticated,
+  });
+
   // TRAILER
   const {
     data: trailer,
@@ -45,13 +57,14 @@ export default function CatalogueIdPageClient({
     queryKey: ["trailer", type, id],
     queryFn: () => getMediaTrailerById(type, id),
     enabled: false,
+    retry: 1,
   });
 
   // USER'S RATING
   const { data: userRating, isLoading: isRatingLoading } = useQuery({
     queryKey: ["rating", type, id],
     queryFn: () => getRating(type, Number(id)),
-    enabled: !!type && !!id,
+    enabled: !!type && !!id && !!isAuthenticated,
   });
 
   // SAVE RATING
@@ -76,7 +89,15 @@ export default function CatalogueIdPageClient({
 
     if (result.data) {
       setIsTrailerOpen(true);
+      return;
     }
+
+    if (result.isError) {
+      showError("Trailer unavailable right now.");
+      return;
+    }
+
+    showError("No trailer available for this title.");
   };
 
   if (isLoading) {
@@ -181,8 +202,9 @@ export default function CatalogueIdPageClient({
                 type="button"
                 onClick={handleWatchTrailer}
                 disabled={isTrailerLoading}
+                aria-busy={isTrailerLoading}
               >
-                {isTrailerLoading ? "Loading..." : "Watch trailer"}
+                {isTrailerLoading ? "Finding trailer..." : "Watch trailer"}
               </button>
 
               <FavButton
@@ -323,6 +345,7 @@ export default function CatalogueIdPageClient({
           title={trailer.name}
           tmdbId={media.id}
           type={media.media_type}
+          startSeconds={watchHistory?.progress_seconds ?? 0}
           onClose={() => setIsTrailerOpen(false)}
         />
       )}

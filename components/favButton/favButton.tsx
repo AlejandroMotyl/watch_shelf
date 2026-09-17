@@ -4,6 +4,7 @@ import css from "./favButton.module.css";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addFavorite, getFavorites, removeFavorite } from "@/lib/api/clientApi";
 import { showError } from "@/utils/iziToast";
+import { useAuthStore } from "@/lib/store/authStore/authStore";
 
 interface FavButtonProps {
   size: "big" | "small";
@@ -14,9 +15,12 @@ interface FavButtonProps {
 export default function FavButton({ size, type, id }: FavButtonProps) {
   const queryClient = useQueryClient();
 
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
   const { data: favorites = [] } = useQuery({
     queryKey: ["favorites"],
     queryFn: getFavorites,
+    enabled: isAuthenticated,
   });
 
   const isFavorite = favorites.some(

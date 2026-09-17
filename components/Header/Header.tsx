@@ -22,7 +22,7 @@ export default function Header() {
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
 
-  // ?? CLICK OUTSIDE MENU\
+  // ?? CLICK OUTSIDE MENU
   const userMenuRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -73,6 +73,7 @@ export default function Header() {
           >
             Series
           </button>
+          {/* //TODO: people tab? */}
           {/* <button
             className={`${css.filterButton} ${filter === "people" ? css.active : ""}`}
             type="button"
@@ -99,11 +100,12 @@ export default function Header() {
         isAuthenticated &&
         user && (
           <div className={css.userButtons} ref={userMenuRef}>
-            <button className={css.userButton}>
+            {/* //TODO Notifications, search? */}
+            {/* <button className={css.userButton}>
               <svg className={css.icon} aria-hidden="true">
                 <use href="/sprite.svg#search" />
               </svg>
-            </button>
+            </button> */}
             {/* <button className={css.userButton}>
               <svg className={css.icon} aria-hidden="true">
                 <use href="/sprite.svg#bell" />

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import YouTube, { type YouTubeProps } from "react-youtube";
 import { saveWatchHistory } from "@/lib/api/clientApi";
+import css from "./TrailerPlayer.module.css";
 
 interface TrailerPlayerProps {
   videoKey: string;
@@ -24,26 +25,20 @@ export default function TrailerPlayer({
   const playerRef = useRef<YT.Player | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const previousActiveElementRef = useRef<HTMLElement | null>(null);
+
   const saveProgress = async () => {
     const player = playerRef.current;
 
     if (!player) {
-      console.log("No YouTube player");
       return;
     }
 
     const progressSeconds = Math.floor(player.getCurrentTime());
     const durationSeconds = Math.floor(player.getDuration());
 
-    console.log("Saving history:", {
-      tmdbId,
-      type,
-      progressSeconds,
-      durationSeconds,
-    });
-
     if (!durationSeconds) {
-      console.log("No duration yet");
       return;
     }
 
@@ -54,17 +49,15 @@ export default function TrailerPlayer({
         progressSeconds,
         durationSeconds,
       });
-
-      console.log("History saved");
     } catch (error) {
       console.error("Failed to save watch history:", error);
     }
   };
 
   const startTracking = () => {
-    if (intervalRef.current) return;
-
-    console.log("Started tracking");
+    if (intervalRef.current) {
+      return;
+    }
 
     intervalRef.current = setInterval(() => {
       saveProgress();
@@ -72,51 +65,77 @@ export default function TrailerPlayer({
   };
 
   const stopTracking = () => {
-    if (!intervalRef.current) return;
-
-    console.log("Stopped tracking");
+    if (!intervalRef.current) {
+      return;
+    }
 
     clearInterval(intervalRef.current);
     intervalRef.current = null;
   };
 
   const handleReady: YouTubeProps["onReady"] = (event) => {
-    console.log("YouTube ready");
-
     playerRef.current = event.target;
   };
 
   const handleStateChange: YouTubeProps["onStateChange"] = (event) => {
-    console.log("YouTube state:", event.data);
-
-    // 1 = playing
+    // Playing
     if (event.data === 1) {
       startTracking();
     }
 
-    // 2 = paused
+    // Paused
     if (event.data === 2) {
       stopTracking();
       saveProgress();
     }
 
-    // 0 = ended
+    // Ended
     if (event.data === 0) {
       stopTracking();
       saveProgress();
     }
   };
 
-  useEffect(() => {
-    return () => {
-      stopTracking();
-    };
-  }, []);
-
   const handleClose = async () => {
     await saveProgress();
     stopTracking();
     onClose();
+  };
+
+  // Remember the element that opened the modal.
+  useEffect(() => {
+    previousActiveElementRef.current =
+      document.activeElement as HTMLElement | null;
+
+    closeButtonRef.current?.focus();
+
+    return () => {
+      stopTracking();
+
+      previousActiveElementRef.current?.focus();
+    };
+  }, []);
+
+  // Escape closes the modal.
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        handleClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      handleClose();
+    }
   };
 
   const opts: YouTubeProps["opts"] = {
@@ -130,22 +149,42 @@ export default function TrailerPlayer({
   };
 
   return (
-    <div>
-      <div>
-        <h2>{title}</h2>
+    <div
+      className={css.overlay}
+      role="presentation"
+      onMouseDown={handleBackdropClick}
+    >
+      <div
+        className={css.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="trailer-title"
+      >
+        <div className={css.header}>
+          <h2 id="trailer-title" className={css.title}>
+            {title}
+          </h2>
 
-        <button type="button" onClick={handleClose}>
-          Close
-        </button>
-      </div>
+          <button
+            ref={closeButtonRef}
+            type="button"
+            className={css.closeButton}
+            onClick={handleClose}
+            aria-label="Close trailer"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
 
-      <div>
-        <YouTube
-          videoId={videoKey}
-          opts={opts}
-          onReady={handleReady}
-          onStateChange={handleStateChange}
-        />
+        <div className={css.playerWrapper}>
+          <YouTube
+            videoId={videoKey}
+            opts={opts}
+            onReady={handleReady}
+            onStateChange={handleStateChange}
+            className={css.youtube}
+          />
+        </div>
       </div>
     </div>
   );

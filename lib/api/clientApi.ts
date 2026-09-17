@@ -169,6 +169,17 @@ export const getRating = async (
 
 // !!!!!!!!! HISTORY
 
+export const getWatchHistoryItem = async (
+  type: "movie" | "tv",
+  tmdbId: number,
+): Promise<WatchHistory | null> => {
+  const { data } = await api.get<{ history: WatchHistory | null }>(
+    `/profile/history/${type}/${tmdbId}`,
+  );
+
+  return data.history;
+};
+
 export const getWatchHistory = async (
   page = 1,
   limit = 12,
