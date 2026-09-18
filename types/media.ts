@@ -152,3 +152,10 @@ export type Favorite = {
   genres: number[];
   created_at: string;
 };
+export type FavoritesResponse = {
+  favorites: Favorite[];
+  page?: number;
+  limit?: number;
+  total?: number;
+  total_pages?: number;
+};

@@ -2,14 +2,19 @@
 
 import css from "./favButton.module.css";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addFavorite, getFavorites, removeFavorite } from "@/lib/api/clientApi";
+import {
+  addFavorite,
+  getAllFavorites,
+  removeFavorite,
+} from "@/lib/api/clientApi";
 import { showError } from "@/utils/iziToast";
 import { useAuthStore } from "@/lib/store/authStore/authStore";
+import { Favorite } from "@/types/media";
 
 interface FavButtonProps {
   size: "big" | "small";
   type: "movie" | "tv";
-  id: string;
+  id: string | number;
 }
 
 export default function FavButton({ size, type, id }: FavButtonProps) {
@@ -17,15 +22,15 @@ export default function FavButton({ size, type, id }: FavButtonProps) {
 
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-  const { data: favorites = [] } = useQuery({
-    queryKey: ["favorites"],
-    queryFn: getFavorites,
+  const { data: favorites = [] } = useQuery<Favorite[]>({
+    queryKey: ["favorites", "all"],
+    queryFn: getAllFavorites,
     enabled: isAuthenticated,
   });
 
   const isFavorite = favorites.some(
     (favorite) =>
-      favorite.tmdb_id === String(id) && favorite.media_type === type,
+      String(favorite.tmdb_id) === String(id) && favorite.media_type === type,
   );
 
   const addMutation = useMutation({
@@ -33,7 +38,11 @@ export default function FavButton({ size, type, id }: FavButtonProps) {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["favorites"],
+        queryKey: ["favorites", "all"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["favorites", "collection"],
       });
     },
 
@@ -47,7 +56,11 @@ export default function FavButton({ size, type, id }: FavButtonProps) {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["favorites"],
+        queryKey: ["favorites", "all"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["favorites", "collection"],
       });
     },
 
@@ -59,12 +72,19 @@ export default function FavButton({ size, type, id }: FavButtonProps) {
   const isPending = addMutation.isPending || removeMutation.isPending;
 
   const handleFavorite = () => {
-    if (isPending) return;
+    if (!isAuthenticated || isPending) {
+      return;
+    }
+
+    const favorite = {
+      type,
+      id: String(id),
+    };
 
     if (isFavorite) {
-      removeMutation.mutate({ type, id });
+      removeMutation.mutate(favorite);
     } else {
-      addMutation.mutate({ type, id });
+      addMutation.mutate(favorite);
     }
   };
 
@@ -76,6 +96,7 @@ export default function FavButton({ size, type, id }: FavButtonProps) {
       aria-pressed={isFavorite}
       onClick={handleFavorite}
       disabled={isPending}
+      aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
     >
       <svg
         className={size === "big" ? css.bigIcon : css.icon}

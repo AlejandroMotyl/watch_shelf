@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { api } from "@/app/api/api";
-import { isAxiosError } from "axios";
-import { logErrorResponse } from "../../_utils/utils";
 import { cookies } from "next/headers";
+import { isAxiosError } from "axios";
+import { api } from "../../api";
+import { logErrorResponse } from "../../_utils/utils";
 
 export async function GET(req: NextRequest) {
   try {
@@ -16,13 +16,11 @@ export async function GET(req: NextRequest) {
 
     const page = searchParams.get("page") ?? "1";
     const limit = searchParams.get("limit") ?? "12";
-    const all = searchParams.get("all");
 
-    const res = await api.get("/profile/favorites", {
+    const res = await api.get("/profile/reviews", {
       params: {
         page,
         limit,
-        ...(all ? { all } : {}),
       },
       headers: {
         Cookie: `accessToken=${accessToken}; refreshToken=${refreshToken}; sessionId=${sessionId};`,
@@ -66,20 +64,13 @@ export async function POST(req: NextRequest) {
     const refreshToken = cookieStore.get("refreshToken")?.value;
     const sessionId = cookieStore.get("sessionId")?.value;
 
-    const { id, type } = await req.json();
+    const body = await req.json();
 
-    const res = await api.post(
-      "/profile/favorites",
-      {
-        type,
-        id,
+    const res = await api.post("/profile/reviews", body, {
+      headers: {
+        Cookie: `accessToken=${accessToken}; refreshToken=${refreshToken}; sessionId=${sessionId};`,
       },
-      {
-        headers: {
-          Cookie: `accessToken=${accessToken}; refreshToken=${refreshToken}; sessionId=${sessionId};`,
-        },
-      },
-    );
+    });
 
     return NextResponse.json(res.data, {
       status: res.status,

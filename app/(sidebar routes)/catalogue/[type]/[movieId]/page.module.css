@@ -371,3 +371,89 @@
   font-size: 13px;
   font-weight: 700;
 }
+.reviewSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  border: 1px solid var(--accent-primary);
+  border-radius: 20px;
+  background: var(--sidebar-bg);
+}
+
+.reviewHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sectionDescription {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.reviewTextarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 14px 16px;
+
+  resize: vertical;
+
+  border: 1px solid var(--accent-primary);
+  border-radius: 10px;
+
+  background: transparent;
+  color: var(--white);
+
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+
+  outline: none;
+
+  transition:
+    border-color var(--main-transition),
+    background var(--main-transition);
+}
+
+.reviewTextarea::placeholder {
+  color: var(--text-secondary);
+}
+
+.reviewTextarea:focus {
+  background: var(--sidebar-bg);
+  border-color: var(--accent-hover);
+}
+
+.reviewTextarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.reviewFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.reviewCounter {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.reviewFooter .primaryButton {
+  flex-shrink: 0;
+}
+
+.reviewFooter .primaryButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.reviewError {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}

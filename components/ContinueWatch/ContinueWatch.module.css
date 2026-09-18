@@ -14,34 +14,98 @@
 .conWatchList {
   display: flex;
   gap: 24px;
+  padding: 8px 4px;
 }
-.conWatchItem {
+
+.movieItem {
   position: relative;
   outline: 1px solid var(--gray);
-  padding-top: 173px;
-  background-color: orange;
   border-radius: 20px;
-  background-repeat: no-repeat;
-  background-size: cover;
+
+  flex-shrink: 0;
   width: 348px;
   height: 259px;
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+
+  overflow: hidden;
 }
+
+/* Entire card is clickable */
+.movieLink {
+  position: absolute;
+  inset: 0;
+
+  display: block;
+
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Glass information panel at the bottom */
 .titleWrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
   padding: 16px 20px;
+
+  min-height: 86px;
+
   background: var(--glass-bg);
   opacity: 95%;
-  height: 100%;
+
   border-radius: 0 0 20px 20px;
+
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
+
 .movieTitle {
   font: var(--pop-16px-semibold);
   color: var(--black);
   line-height: 24px;
-  margin-bottom: 6px;
+  margin: 0 0 6px;
 }
+
 .description {
   font: var(--pop-14px-regular);
   color: var(--black);
+  margin: 0;
+}
+
+.watchedDate {
+  font: var(--pop-14px-regular);
+  color: var(--black);
+  margin: 6px 0 0;
+}
+
+.progressWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.progressBar {
+  flex: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--gray);
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--white);
+}
+
+.progressText {
+  font: var(--pop-12px-regular);
+  color: var(--black);
+  white-space: nowrap;
 }

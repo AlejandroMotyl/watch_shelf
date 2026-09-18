@@ -5,7 +5,7 @@ import css from "./page.module.css";
 import Trending from "@/components/Trending/Trending";
 import ContinueWatch from "@/components/ContinueWatch/ContinueWatch";
 import { useQuery } from "@tanstack/react-query";
-import { getTrending } from "@/lib/api/clientApi";
+import { getTrending, getWatchHistory } from "@/lib/api/clientApi";
 import { useMediaFilterStore } from "@/lib/store/mediaFilterStore/mediaFilterStore";
 
 export default function CataloguePageClient() {
@@ -16,18 +16,24 @@ export default function CataloguePageClient() {
     refetchOnMount: false,
   });
 
+  const { data: historyData, isLoading: historyLoading } = useQuery({
+    queryKey: ["homeHistory"],
+    queryFn: () => getWatchHistory(),
+    refetchOnMount: false,
+  });
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!data?.results?.length) {
+  if (!data?.results?.length || !historyData) {
     return <div>No movies found.</div>;
   }
   return (
     <>
       <Hero media={data.results[0]} />
       <Trending media={data.results.slice(1)} />
-      <ContinueWatch />
+      <ContinueWatch history={historyData.history} />
     </>
   );
 }

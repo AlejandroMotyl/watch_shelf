@@ -6,12 +6,14 @@ import {
   getMediaById,
   getMediaTrailerById,
   getRating,
+  getReview,
   getWatchHistoryItem,
   saveRating,
+  saveReview,
 } from "@/lib/api/clientApi";
 import Image from "next/image";
 import FavButton from "@/components/favButton/favButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getPosterUrl } from "@/lib/services/mediaPosters";
 import TrailerPlayer from "@/components/TrailerPlayer.tsx/TrailerPlayer";
 import { useAuthStore } from "@/lib/store/authStore/authStore";
@@ -32,6 +34,7 @@ export default function CatalogueIdPageClient({
 
   const [isTrailerOpen, setIsTrailerOpen] = useState(false);
   const [hoverRating, setHoverRating] = useState<number | null>(null);
+  const [reviewContent, setReviewContent] = useState("");
 
   // MEDIA
   const { data, isLoading, isError, error } = useQuery({
@@ -67,6 +70,18 @@ export default function CatalogueIdPageClient({
     enabled: !!type && !!id && !!isAuthenticated,
   });
 
+  // USER'S REVIEW
+  const { data: userReview, isLoading: isReviewLoading } = useQuery({
+    queryKey: ["review", type, id],
+    queryFn: () => getReview(type, Number(id)),
+    enabled: !!type && !!id && !!isAuthenticated,
+  });
+
+  // PUT EXISTING REVIEW INTO TEXTAREA
+  useEffect(() => {
+    setReviewContent(userReview?.review_content ?? "");
+  }, [userReview]);
+
   // SAVE RATING
   const ratingMutation = useMutation({
     mutationFn: (rating: number) =>
@@ -78,6 +93,26 @@ export default function CatalogueIdPageClient({
 
     onSuccess: (rating) => {
       queryClient.setQueryData(["rating", type, id], rating);
+    },
+  });
+
+  // SAVE REVIEW
+  const reviewMutation = useMutation({
+    mutationFn: () =>
+      saveReview({
+        tmdbId: Number(id),
+        type,
+        reviewContent: reviewContent.trim(),
+      }),
+
+    onSuccess: (review) => {
+      queryClient.setQueryData(["review", type, id], review);
+
+      setReviewContent(review.review_content);
+    },
+
+    onError: () => {
+      showError("Failed to save review");
     },
   });
 
@@ -98,6 +133,16 @@ export default function CatalogueIdPageClient({
     }
 
     showError("No trailer available for this title.");
+  };
+
+  const handleReviewSubmit = () => {
+    const content = reviewContent.trim();
+
+    if (!content || reviewMutation.isPending) {
+      return;
+    }
+
+    reviewMutation.mutate();
   };
 
   if (isLoading) {
@@ -338,7 +383,63 @@ export default function CatalogueIdPageClient({
             </div>
           </div>
         </section>
+
+        {/* USER REVIEW */}
+
+        <section className={css.reviewSection}>
+          <div className={css.reviewHeader}>
+            <h2 className={css.sectionTitle}>Your review</h2>
+
+            <p className={css.sectionDescription}>
+              Share your thoughts about this title.
+            </p>
+          </div>
+
+          {!isAuthenticated ? (
+            <p className={css.sectionDescription}>Sign in to write a review.</p>
+          ) : isReviewLoading ? (
+            <p className={css.sectionDescription}>Loading your review...</p>
+          ) : (
+            <>
+              <textarea
+                className={css.reviewTextarea}
+                value={reviewContent}
+                onChange={(event) => setReviewContent(event.target.value)}
+                placeholder="What did you think about this movie or show?"
+                maxLength={2000}
+                rows={6}
+                disabled={reviewMutation.isPending}
+              />
+
+              <div className={css.reviewFooter}>
+                <span className={css.reviewCounter}>
+                  {reviewContent.length}/2000
+                </span>
+
+                <button
+                  type="button"
+                  className={css.primaryButton}
+                  onClick={handleReviewSubmit}
+                  disabled={reviewMutation.isPending || !reviewContent.trim()}
+                >
+                  {reviewMutation.isPending
+                    ? "Saving..."
+                    : userReview
+                      ? "Update review"
+                      : "Post review"}
+                </button>
+              </div>
+
+              {reviewMutation.isError && (
+                <p className={css.reviewError} role="alert">
+                  Failed to save your review. Please try again.
+                </p>
+              )}
+            </>
+          )}
+        </section>
       </section>
+
       {isTrailerOpen && trailer && (
         <TrailerPlayer
           videoKey={trailer.key}

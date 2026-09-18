@@ -6,11 +6,21 @@ import {
   Favorite,
   MediaTrailer,
   MediaTrailerResponse,
+  FavoritesResponse,
 } from "@/types/media";
 import { api } from "./api";
 import { filterParams } from "@/types/filter";
-import { MediaReviewsResponse } from "@/types/reviews";
-import { LoginData, RegisterData, User } from "@/types/user";
+import { MediaReviewsResponse, Review } from "@/types/reviews";
+import {
+  LoginData,
+  RegisterData,
+  ReviewsResponse,
+  SaveReviewResponse,
+  SaveReviewVariables,
+  User,
+  UserReview,
+  UserReviewDetail,
+} from "@/types/user";
 import {
   GetRatingResponse,
   Rating,
@@ -109,15 +119,32 @@ export const updatePassword = async (
 };
 
 // !!!!!!!!! FAVORITES
-type FavoritesResponse = {
-  favorites: Favorite[];
+export const getFavorites = async (
+  page = 1,
+  limit = 12,
+): Promise<FavoritesResponse> => {
+  const { data } = await api.get<FavoritesResponse>("/profile/favorites", {
+    params: {
+      page,
+      limit,
+    },
+  });
+
+  return data;
 };
 
-export const getFavorites = async (): Promise<Favorite[]> => {
-  const { data } = await api.get<FavoritesResponse>("/profile/favorites");
+export const getAllFavorites = async (): Promise<Favorite[]> => {
+  const { data } = await api.get<{
+    favorites: Favorite[];
+  }>("/profile/favorites", {
+    params: {
+      all: true,
+    },
+  });
 
   return data.favorites;
 };
+
 export const addFavorite = async ({
   type,
   id,
@@ -220,6 +247,47 @@ export const saveWatchHistory = async ({
   );
 
   return data.history;
+};
+
+// !!!!!!!!! USER REVIEWS
+
+export const getReview = async (
+  type: "movie" | "tv",
+  tmdbId: number,
+): Promise<UserReviewDetail | null> => {
+  const { data } = await api.get<{
+    review: UserReviewDetail | null;
+  }>(`/profile/reviews/${type}/${tmdbId}`);
+
+  return data.review;
+};
+
+export const getUserReviews = async (
+  page = 1,
+  limit = 12,
+): Promise<ReviewsResponse> => {
+  const { data } = await api.get<ReviewsResponse>("/profile/reviews", {
+    params: {
+      page,
+      limit,
+    },
+  });
+
+  return data;
+};
+
+export const saveReview = async ({
+  tmdbId,
+  type,
+  reviewContent,
+}: SaveReviewVariables): Promise<UserReview> => {
+  const { data } = await api.post<SaveReviewResponse>("/profile/reviews", {
+    tmdbId,
+    type,
+    reviewContent,
+  });
+
+  return data.review;
 };
 
 // !!!!!!!!! AUTH
