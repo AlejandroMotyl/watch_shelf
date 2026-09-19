@@ -1,10 +1,10 @@
-import CollectionPage from "@/components/CollectionPage/CollectionPage";
 import css from "./page.module.css";
+import UserReviewsPageClient from "./UserReviewsPageClient";
 
 export default function ReviewsPage() {
   return (
     <>
-      <CollectionPage type="Reviews" />
+      <UserReviewsPageClient />
     </>
   );
 }

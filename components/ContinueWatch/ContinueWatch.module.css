@@ -17,7 +17,7 @@
   padding: 8px 4px;
 }
 
-.movieItem {
+.mediaItem {
   position: relative;
   outline: 1px solid var(--gray);
   border-radius: 20px;
@@ -31,10 +31,20 @@
   background-position: center;
 
   overflow: hidden;
+  transition:
+    transform 180ms ease,
+    outline-color 180ms ease,
+    box-shadow 180ms ease;
 }
 
+.mediaItem:hover,
+.mediaItem:has(.mediaLink:focus) {
+  transform: translateY(-4px) scale(1.015);
+  outline-color: var(--white);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 20%);
+}
 /* Entire card is clickable */
-.movieLink {
+.mediaLink {
   position: absolute;
   inset: 0;
 
@@ -64,7 +74,7 @@
   -webkit-backdrop-filter: blur(20px);
 }
 
-.movieTitle {
+.mediaTitle {
   font: var(--pop-16px-semibold);
   color: var(--black);
   line-height: 24px;

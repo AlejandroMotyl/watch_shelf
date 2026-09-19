@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { parseCookie } from "cookie";
 import { checkServerSession } from "./lib/api/serverApi";
 
-const privateRoutes = ["/add-recipe", "/profile"];
+const privateRoutes = ["/profile"];
 const publicRoutes = ["/auth"];
 
 export async function proxy(request: NextRequest) {

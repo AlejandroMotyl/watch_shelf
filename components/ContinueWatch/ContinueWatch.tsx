@@ -4,7 +4,7 @@ import css from "./ContinueWatch.module.css";
 import FavButton from "../favButton/favButton";
 import { getPosterUrl } from "@/lib/services/mediaPosters";
 import Link from "next/link";
-import { TMDB_MOVIE_GENRES } from "@/lib/constants/genreIds";
+import { TMDB_MEDIA_GENRES } from "@/lib/constants/genreIds";
 import { WatchHistory } from "@/types/history";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import { useRef } from "react";
@@ -62,7 +62,7 @@ export default function ContinueWatch({ history }: ContinueWatchProps) {
 
             return (
               <li
-                className={css.movieItem}
+                className={css.mediaItem}
                 key={item.id}
                 style={{
                   backgroundImage: `url(${getPosterUrl(
@@ -79,15 +79,15 @@ export default function ContinueWatch({ history }: ContinueWatchProps) {
 
                 <Link
                   href={`/catalogue/${item.media_type}/${item.tmdb_id}`}
-                  className={css.movieLink}
+                  className={css.mediaLink}
                 >
                   <div className={css.titleWrapper}>
-                    <h3 className={css.movieTitle}>{item.title}</h3>
+                    <h3 className={css.mediaTitle}>{item.title}</h3>
 
                     <p className={css.description}>
                       {item.release_date?.slice(0, 4)} |{" "}
                       {item.genres
-                        .map((id) => TMDB_MOVIE_GENRES[id])
+                        .map((id) => TMDB_MEDIA_GENRES[id])
                         .join(" • ")}
                     </p>
 

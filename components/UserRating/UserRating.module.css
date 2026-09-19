@@ -1,0 +1,55 @@
+/* UserRating styles */
+.userRating {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  border: 1px solid var(--accent-primary);
+  border-radius: 10px;
+  background: transparent;
+}
+
+.ratingLabel {
+  color: var(--text-secondary);
+  font-size: 24px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.starRating {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.starButton {
+  width: 24px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color var(--main-transition),
+    transform var(--main-transition);
+}
+
+.starButton:hover {
+  color: var(--accent-primary);
+  transform: scale(1.1);
+}
+
+.starActive {
+  color: var(--accent-primary);
+}
+
+.ratingValue {
+  min-width: 28px;
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 700;
+}

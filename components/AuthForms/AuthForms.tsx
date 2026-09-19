@@ -15,7 +15,7 @@ export default function AuthForms({ type }: AuthFormsProps) {
   const [open, setIsOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const setUser = useAuthStore((state) => state.setUser);
-  // ! INVALID CREDENTIALS ERROR WHEN USER LOG INS WITHOUT ACC
+  // ! INVALID CREDENTIALS ERROR WHEN USER LOG INS WITHOUT ACC, ADD SOME FRONTEND VALIDATION. TEST BACKEND RESPONSES ON ERRORS
   const errorHandler = (error: unknown) => {
     if (isAxiosError(error)) {
       const message =

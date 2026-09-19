@@ -7,9 +7,12 @@ import ContinueWatch from "@/components/ContinueWatch/ContinueWatch";
 import { useQuery } from "@tanstack/react-query";
 import { getTrending, getWatchHistory } from "@/lib/api/clientApi";
 import { useMediaFilterStore } from "@/lib/store/mediaFilterStore/mediaFilterStore";
+import { useAuthStore } from "@/lib/store/authStore/authStore";
 
 export default function CataloguePageClient() {
-  const filter = useMediaFilterStore((store) => store.filter);
+  const filter = useMediaFilterStore((state) => state.filter);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
   const { data, isLoading } = useQuery({
     queryKey: ["trending", filter],
     queryFn: () => getTrending(filter),
@@ -20,20 +23,21 @@ export default function CataloguePageClient() {
     queryKey: ["homeHistory"],
     queryFn: () => getWatchHistory(),
     refetchOnMount: false,
+    enabled: isAuthenticated,
   });
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!data?.results?.length || !historyData) {
+  if (!data?.results?.length || (isAuthenticated && !historyData)) {
     return <div>No movies found.</div>;
   }
   return (
     <>
       <Hero media={data.results[0]} />
       <Trending media={data.results.slice(1)} />
-      <ContinueWatch history={historyData.history} />
+      {isAuthenticated && <ContinueWatch history={historyData!.history} />}
     </>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import YouTube, { type YouTubeProps } from "react-youtube";
+import YouTube, { type YouTubeProps, type YouTubePlayer } from "react-youtube";
 import { saveWatchHistory } from "@/lib/api/clientApi";
 import css from "./TrailerPlayer.module.css";
 
@@ -22,7 +22,8 @@ export default function TrailerPlayer({
   startSeconds = 0,
   onClose,
 }: TrailerPlayerProps) {
-  const playerRef = useRef<YT.Player | null>(null);
+  // !!!!! CHANGE STYLES
+  const playerRef = useRef<YouTubePlayer | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);

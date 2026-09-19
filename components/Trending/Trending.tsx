@@ -6,7 +6,7 @@ import { getPosterUrl } from "@/lib/services/mediaPosters";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import Link from "next/link";
 import { useRef } from "react";
-import { TMDB_MOVIE_GENRES } from "@/lib/constants/genreIds";
+import { TMDB_MEDIA_GENRES } from "@/lib/constants/genreIds";
 
 interface TrendingProps {
   media: Movie[] | TV[];
@@ -84,7 +84,7 @@ export default function Trending({ media }: TrendingProps) {
                       : media.first_air_date.slice(0, 4)}{" "}
                     |{" "}
                     {media.genre_ids
-                      .map((id) => TMDB_MOVIE_GENRES[id])
+                      .map((id) => TMDB_MEDIA_GENRES[id])
                       .join(" • ")}
                   </p>
                 </div>

@@ -1,23 +1,21 @@
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import css from "./page.module.css";
 import {
   getMediaById,
   getMediaTrailerById,
-  getRating,
-  getReview,
   getWatchHistoryItem,
-  saveRating,
-  saveReview,
 } from "@/lib/api/clientApi";
 import Image from "next/image";
 import FavButton from "@/components/favButton/favButton";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getPosterUrl } from "@/lib/services/mediaPosters";
 import TrailerPlayer from "@/components/TrailerPlayer.tsx/TrailerPlayer";
 import { useAuthStore } from "@/lib/store/authStore/authStore";
 import { showError } from "@/utils/iziToast";
+import UserRating from "@/components/UserRating/UserRating";
+import UserReviewSection from "@/components/UserReviewSection/UserReviewSection";
 
 interface CatalogueIdPageClientProps {
   type: "movie" | "tv";
@@ -28,13 +26,9 @@ export default function CatalogueIdPageClient({
   type,
   id,
 }: CatalogueIdPageClientProps) {
-  const queryClient = useQueryClient();
-
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   const [isTrailerOpen, setIsTrailerOpen] = useState(false);
-  const [hoverRating, setHoverRating] = useState<number | null>(null);
-  const [reviewContent, setReviewContent] = useState("");
 
   // MEDIA
   const { data, isLoading, isError, error } = useQuery({
@@ -63,59 +57,6 @@ export default function CatalogueIdPageClient({
     retry: 1,
   });
 
-  // USER'S RATING
-  const { data: userRating, isLoading: isRatingLoading } = useQuery({
-    queryKey: ["rating", type, id],
-    queryFn: () => getRating(type, Number(id)),
-    enabled: !!type && !!id && !!isAuthenticated,
-  });
-
-  // USER'S REVIEW
-  const { data: userReview, isLoading: isReviewLoading } = useQuery({
-    queryKey: ["review", type, id],
-    queryFn: () => getReview(type, Number(id)),
-    enabled: !!type && !!id && !!isAuthenticated,
-  });
-
-  // PUT EXISTING REVIEW INTO TEXTAREA
-  useEffect(() => {
-    setReviewContent(userReview?.review_content ?? "");
-  }, [userReview]);
-
-  // SAVE RATING
-  const ratingMutation = useMutation({
-    mutationFn: (rating: number) =>
-      saveRating({
-        tmdbId: Number(id),
-        type,
-        rating,
-      }),
-
-    onSuccess: (rating) => {
-      queryClient.setQueryData(["rating", type, id], rating);
-    },
-  });
-
-  // SAVE REVIEW
-  const reviewMutation = useMutation({
-    mutationFn: () =>
-      saveReview({
-        tmdbId: Number(id),
-        type,
-        reviewContent: reviewContent.trim(),
-      }),
-
-    onSuccess: (review) => {
-      queryClient.setQueryData(["review", type, id], review);
-
-      setReviewContent(review.review_content);
-    },
-
-    onError: () => {
-      showError("Failed to save review");
-    },
-  });
-
   const media = data?.media;
   const staff = data?.staff;
 
@@ -133,16 +74,6 @@ export default function CatalogueIdPageClient({
     }
 
     showError("No trailer available for this title.");
-  };
-
-  const handleReviewSubmit = () => {
-    const content = reviewContent.trim();
-
-    if (!content || reviewMutation.isPending) {
-      return;
-    }
-
-    reviewMutation.mutate();
   };
 
   if (isLoading) {
@@ -174,14 +105,6 @@ export default function CatalogueIdPageClient({
   }
 
   const posterUrl = getPosterUrl(media.poster_path, "w500");
-
-  const selectedRating = userRating?.rating ?? null;
-
-  const displayedRating = hoverRating ?? selectedRating;
-
-  const handleRatingClick = (rating: number) => {
-    ratingMutation.mutate(rating);
-  };
 
   return (
     <main className={css.mediaPage}>
@@ -258,47 +181,10 @@ export default function CatalogueIdPageClient({
                 type={media.media_type}
               />
 
-              <div className={css.userRating}>
-                <span className={css.ratingLabel}>Your rating</span>
-
-                <div
-                  className={css.starRating}
-                  onMouseLeave={() => setHoverRating(null)}
-                >
-                  {isRatingLoading ? (
-                    <span>Loading...</span>
-                  ) : (
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rating) => (
-                      <button
-                        key={rating}
-                        type="button"
-                        className={`${css.starButton} ${
-                          displayedRating !== null && rating <= displayedRating
-                            ? css.starActive
-                            : ""
-                        }`}
-                        onMouseEnter={() => setHoverRating(rating)}
-                        onClick={() => handleRatingClick(rating)}
-                        disabled={ratingMutation.isPending}
-                        aria-label={`Rate ${rating} out of 10`}
-                      >
-                        ★
-                      </button>
-                    ))
-                  )}
-                </div>
-
-                {ratingMutation.isError && (
-                  <span className={css.ratingError}>
-                    Failed to save rating.
-                  </span>
-                )}
-              </div>
+              <UserRating id={id} type={type} />
             </div>
           </div>
         </div>
-
-        {/* MEDIA DETAILS */}
 
         <section className={css.detailsSection}>
           <h2 className={css.sectionTitle}>Details</h2>
@@ -360,8 +246,6 @@ export default function CatalogueIdPageClient({
           </div>
         </section>
 
-        {/* TMDB RATING */}
-
         <section className={css.TMDbSection}>
           <div className={css.TMDbHeader}>
             <span className={css.TMDbBadge}>TMDb</span>
@@ -384,60 +268,7 @@ export default function CatalogueIdPageClient({
           </div>
         </section>
 
-        {/* USER REVIEW */}
-
-        <section className={css.reviewSection}>
-          <div className={css.reviewHeader}>
-            <h2 className={css.sectionTitle}>Your review</h2>
-
-            <p className={css.sectionDescription}>
-              Share your thoughts about this title.
-            </p>
-          </div>
-
-          {!isAuthenticated ? (
-            <p className={css.sectionDescription}>Sign in to write a review.</p>
-          ) : isReviewLoading ? (
-            <p className={css.sectionDescription}>Loading your review...</p>
-          ) : (
-            <>
-              <textarea
-                className={css.reviewTextarea}
-                value={reviewContent}
-                onChange={(event) => setReviewContent(event.target.value)}
-                placeholder="What did you think about this movie or show?"
-                maxLength={2000}
-                rows={6}
-                disabled={reviewMutation.isPending}
-              />
-
-              <div className={css.reviewFooter}>
-                <span className={css.reviewCounter}>
-                  {reviewContent.length}/2000
-                </span>
-
-                <button
-                  type="button"
-                  className={css.primaryButton}
-                  onClick={handleReviewSubmit}
-                  disabled={reviewMutation.isPending || !reviewContent.trim()}
-                >
-                  {reviewMutation.isPending
-                    ? "Saving..."
-                    : userReview
-                      ? "Update review"
-                      : "Post review"}
-                </button>
-              </div>
-
-              {reviewMutation.isError && (
-                <p className={css.reviewError} role="alert">
-                  Failed to save your review. Please try again.
-                </p>
-              )}
-            </>
-          )}
-        </section>
+        <UserReviewSection id={id} type={type} />
       </section>
 
       {isTrailerOpen && trailer && (

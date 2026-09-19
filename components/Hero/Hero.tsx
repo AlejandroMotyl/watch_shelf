@@ -3,7 +3,7 @@ import css from "./Hero.module.css";
 import FavButton from "../favButton/favButton";
 import { Movie, TV } from "@/types/media";
 import { getPosterUrl } from "@/lib/services/mediaPosters";
-import { TMDB_MOVIE_GENRES } from "@/lib/constants/genreIds";
+import { TMDB_MEDIA_GENRES } from "@/lib/constants/genreIds";
 interface HeroProps {
   media: TV | Movie;
 }
@@ -11,7 +11,7 @@ interface HeroProps {
 export default function Hero({ media }: HeroProps) {
   const posterUrl = getPosterUrl(media.backdrop_path, "w1280");
 
-  const genres = media.genre_ids.map((id) => TMDB_MOVIE_GENRES[id]);
+  const genres = media.genre_ids.map((id) => TMDB_MEDIA_GENRES[id]);
 
   return (
     <section

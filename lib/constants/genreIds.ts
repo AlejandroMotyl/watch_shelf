@@ -1,4 +1,4 @@
-export const TMDB_MOVIE_GENRES: Record<number, string> = {
+export const TMDB_MEDIA_GENRES: Record<number, string> = {
   28: "Action",
   12: "Adventure",
   16: "Animation",

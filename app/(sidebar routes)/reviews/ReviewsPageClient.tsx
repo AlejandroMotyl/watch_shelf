@@ -7,6 +7,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getReviews } from "@/lib/api/clientApi";
 import { getPosterUrl } from "@/lib/services/mediaPosters";
 import { useMediaFilterStore } from "@/lib/store/mediaFilterStore/mediaFilterStore";
+import LoadMoreBtn from "@/components/LoadMoreBtn/LoadMoreBtn";
 
 export default function ReviewsPageClient() {
   const filter = useMediaFilterStore((store) => store.filter);
@@ -105,16 +106,10 @@ export default function ReviewsPageClient() {
         </ul>
 
         {hasNextPage && (
-          <div className={css.loadMoreWrapper}>
-            <button
-              type="button"
-              className={css.loadMoreButton}
-              onClick={() => fetchNextPage()}
-              disabled={isFetchingNextPage}
-            >
-              {isFetchingNextPage ? "Loading..." : "Load more"}
-            </button>
-          </div>
+          <LoadMoreBtn
+            fetchNextPage={fetchNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+          />
         )}
       </section>
     </main>
