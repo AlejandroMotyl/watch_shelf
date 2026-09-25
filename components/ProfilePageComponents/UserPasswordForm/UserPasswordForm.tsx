@@ -1,7 +1,8 @@
 import css from "./UserPasswordForm.module.css";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { updatePassword } from "@/lib/api/clientApi";
+import { logout, updatePassword } from "@/lib/api/clientApi";
+import { showError, showMessage } from "@/utils/iziToast";
 
 export default function UserPasswordForm() {
   const [error, setError] = useState<string>("");
@@ -10,6 +11,7 @@ export default function UserPasswordForm() {
     mutationFn: updatePassword,
     onSuccess: (data) => {
       setError("");
+      showMessage("Successfully changed your password!");
     },
     onError: () => {
       setError("Failed to update the password");

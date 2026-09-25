@@ -4,7 +4,7 @@ export async function showError(message: string) {
   iziToast.error({
     class: "iziToastError",
     theme: "dark",
-    title: "Something went wrong",
+    title: "Error",
     message,
     position: "topRight",
     timeout: 4000,

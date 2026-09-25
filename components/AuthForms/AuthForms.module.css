@@ -17,6 +17,7 @@
   font: var(--pop-16px-medium);
   margin-top: 16px;
   transition: background var(--main-transition);
+  cursor: pointer;
 }
 .authButton:hover,
 .authButton:focus {
@@ -78,6 +79,7 @@
   background: var(--white);
   color: var(--black);
   font: var(--pop-16px-bold);
+  outline: none;
 }
 .formInput::placeholder {
   opacity: 0;

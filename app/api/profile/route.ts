@@ -1,60 +1,36 @@
 export const dynamic = "force-dynamic";
-
 import { NextRequest, NextResponse } from "next/server";
 import { api } from "@/app/api/api";
-import { cookies } from "next/headers";
-import { isAxiosError } from "axios";
-import { logErrorResponse } from "../_utils/utils";
 
-export async function GET() {
+import { errorCatcher } from "../_utils/utils";
+
+export async function GET(req: NextRequest) {
   try {
-    const cookieStore = await cookies();
+    const cookieHeader = req.headers.get("cookie");
 
     const res = await api.get("/profile", {
       headers: {
-        Cookie: cookieStore.toString(),
+        Cookie: cookieHeader ?? "",
       },
     });
     return NextResponse.json(res.data, { status: res.status });
   } catch (error) {
-    if (isAxiosError(error)) {
-      logErrorResponse(error.response?.data);
-      return NextResponse.json(
-        { error: error.message, response: error.response?.data },
-        { status: error.status },
-      );
-    }
-    logErrorResponse({ message: (error as Error).message });
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 },
-    );
+    return errorCatcher(error);
   }
 }
 
 export async function PATCH(req: NextRequest) {
   try {
-    const cookieStore = await cookies();
+    const cookieHeader = req.headers.get("cookie");
     const avatar = await req.formData();
 
     const res = await api.patch("/profile", avatar, {
       headers: {
-        Cookie: cookieStore.toString(),
+        Cookie: cookieHeader ?? "",
       },
     });
     return NextResponse.json(res.data, { status: res.status });
   } catch (error) {
-    if (isAxiosError(error)) {
-      logErrorResponse(error.response?.data);
-      return NextResponse.json(
-        { error: error.message, response: error.response?.data },
-        { status: error.status },
-      );
-    }
-    logErrorResponse({ message: (error as Error).message });
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 },
-    );
+    return errorCatcher(error);
   }
 }

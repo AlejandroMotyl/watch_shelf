@@ -163,7 +163,7 @@ textarea {
   --toast-bg: var(--sidebar-bg);
   --toast-border: var(--border);
   min-width: 320px;
-  max-width: 420px;
+  max-width: 460px;
   padding: 16px 18px;
   background: var(--toast-bg) !important;
   border: 1px solid var(--toast-border) !important;
@@ -174,6 +174,9 @@ textarea {
   font-family: "Poppins", sans-serif !important;
   overflow: hidden;
 }
+.iziToast-body {
+  margin: 0 15px 0 0 !important;
+}
 .iziToast-title {
   margin-bottom: 3px;
   color: var(--text-primary) !important;
@@ -181,6 +184,7 @@ textarea {
 }
 .iziToast-message {
   color: var(--text-secondary) !important;
+  margin: 2px 0px 0px 0px !important;
   font: var(--pop-14px-regular) !important;
 }
 .iziToast-close {
