@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useAuthStore } from "@/lib/store/authStore/authStore";
 import { useMutation } from "@tanstack/react-query";
 import { updateAvatar } from "@/lib/api/clientApi";
+import { processImageForPreview } from "@/utils/imageProcessing";
 
 export default function UserAvatarForm() {
   const user = useAuthStore((state) => state.user);
@@ -26,7 +27,7 @@ export default function UserAvatarForm() {
     return <div>Loading...</div>;
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
     setError("");
@@ -45,15 +46,14 @@ export default function UserAvatarForm() {
       return;
     }
 
-    setSelectedFile(file);
+    try {
+      const preview = await processImageForPreview(file);
 
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setPreviewUrl(reader.result as string);
-    };
-
-    reader.readAsDataURL(file);
+      setSelectedFile(file);
+      setPreviewUrl(preview);
+    } catch {
+      setError("Unable to process image");
+    }
   };
 
   const handleRemoveAvatar = () => setPreviewUrl("");
@@ -87,21 +87,25 @@ export default function UserAvatarForm() {
             onChange={handleFileChange}
           />
         </label>
-        <button
-          className={css.saveButton}
-          type="submit"
-          disabled={!selectedFile || isPending}
-        >
-          {isPending ? "Saving..." : "Save"}
-        </button>
 
-        <button
-          className={css.removeButton}
-          type="button"
-          onClick={handleRemoveAvatar}
-        >
-          Remove
-        </button>
+        {previewUrl && (
+          <>
+            <button
+              className={css.saveButton}
+              type="submit"
+              disabled={!selectedFile || isPending}
+            >
+              {isPending ? "Saving..." : "Save"}
+            </button>{" "}
+            <button
+              className={css.removeButton}
+              type="button"
+              onClick={handleRemoveAvatar}
+            >
+              Remove
+            </button>
+          </>
+        )}
       </div>
 
       {error && <p className={css.error}>{error}</p>}

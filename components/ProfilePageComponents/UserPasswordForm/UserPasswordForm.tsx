@@ -1,20 +1,24 @@
 import css from "./UserPasswordForm.module.css";
-import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { logout, updatePassword } from "@/lib/api/clientApi";
+import { updatePassword } from "@/lib/api/clientApi";
 import { showError, showMessage } from "@/utils/iziToast";
+import { isAxiosError } from "axios";
 
 export default function UserPasswordForm() {
-  const [error, setError] = useState<string>("");
-
   const { mutate: updatePasswordMutation, isPending } = useMutation({
     mutationFn: updatePassword,
-    onSuccess: (data) => {
-      setError("");
+    onSuccess: () => {
       showMessage("Successfully changed your password!");
     },
-    onError: () => {
-      setError("Failed to update the password");
+    onError: (error) => {
+      if (isAxiosError(error)) {
+        showError(
+          error.response?.data?.response?.validation?.body?.message ??
+            "Failed to update the password",
+        );
+      } else {
+        showError("Failed to update the password");
+      }
     },
   });
 
@@ -31,11 +35,15 @@ export default function UserPasswordForm() {
       !newPassword.trim() ||
       !newPasswordRepeat.trim()
     ) {
-      setError("Make sure to fill all the fields");
+      showError("Make sure to fill all the fields");
       return;
     }
     if (newPassword !== newPasswordRepeat) {
-      setError("New passwords do not match");
+      showError("New passwords do not match");
+      return;
+    }
+    if (newPassword === currentPassword) {
+      showError("New password must be different from current password");
       return;
     }
     updatePasswordMutation({ currentPassword, newPassword });
@@ -72,7 +80,6 @@ export default function UserPasswordForm() {
           name="newPasswordRepeat"
         />
       </label>
-      {error && <p className={css.error}>{error}</p>}
       <button className={css.primaryButton} type="submit" disabled={isPending}>
         {isPending ? "Changing..." : "Change password"}
       </button>

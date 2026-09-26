@@ -2,21 +2,28 @@ import { useAuthStore } from "@/lib/store/authStore/authStore";
 import css from "./UsernameForm.module.css";
 import { useMutation } from "@tanstack/react-query";
 import { updateUsername } from "@/lib/api/clientApi";
-import { useState } from "react";
+import { showError, showMessage } from "@/utils/iziToast";
+import { isAxiosError } from "axios";
 
 export default function UsernameForm() {
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
-  const [error, setError] = useState<string>("");
 
   const { mutate: updateUsernameMutation, isPending } = useMutation({
     mutationFn: updateUsername,
     onSuccess: (data) => {
       setUser(data.user);
-      setError("");
+      showMessage("Updated username successfully");
     },
-    onError: () => {
-      setError("Failed to update the username");
+    onError: (error) => {
+      if (isAxiosError(error)) {
+        showError(
+          error.response?.data?.response?.validation?.body?.message ??
+            "Failed to update the password",
+        );
+      } else {
+        showError("Failed to update the password");
+      }
     },
   });
 
@@ -27,7 +34,11 @@ export default function UsernameForm() {
     const username = formData.get("username") as string;
 
     if (!username.trim().length) {
-      setError("Make sure to write the name");
+      showError("Make sure to fill the field");
+      return;
+    }
+    if (username.trim() === user?.username) {
+      showError("Username matches the old one");
       return;
     }
     updateUsernameMutation(username);
@@ -63,7 +74,6 @@ export default function UsernameForm() {
           Email address cannot be changed.
         </small>
       </label>
-      {error && <p className={css.error}>{error}</p>}
       <button className={css.primaryButton} type="submit" disabled={isPending}>
         {isPending ? "Saving..." : "Save changes"}
       </button>

@@ -19,15 +19,11 @@ export default function AuthForms({ type }: AuthFormsProps) {
   const errorHandler = (error: unknown) => {
     if (isAxiosError(error)) {
       const message =
-        error.response?.data?.response?.validation?.body?.message ??
+        error.response?.data?.response?.validation?.body.message ??
         error.response?.data?.response?.message ??
         error.response?.data?.message;
 
-      setError(
-        message
-          ? message.toUpperCase()
-          : "Something went wrong. Please try again.",
-      );
+      setError(message ? message : "Something went wrong. Please try again.");
 
       return;
     }
@@ -41,7 +37,6 @@ export default function AuthForms({ type }: AuthFormsProps) {
   };
 
   async function handleSubmit(formdata: FormData) {
-    setError(null);
     if (!open) {
       setIsOpen(true);
       return;
@@ -49,7 +44,7 @@ export default function AuthForms({ type }: AuthFormsProps) {
     const email = getFormValue(formdata, "email");
     const password = getFormValue(formdata, "password");
     if (!email || !password) {
-      setError("Please fill out all the fields!");
+      setError("Make sure to fill all the fields");
       return;
     }
 
@@ -63,12 +58,12 @@ export default function AuthForms({ type }: AuthFormsProps) {
         const passwordRepeat = getFormValue(formdata, "passwordRepeat");
 
         if (!username || !passwordRepeat) {
-          setError("Please fill out all the fields!");
+          setError("Make sure to fill all the fields");
           return;
         }
 
         if (password !== passwordRepeat) {
-          setError("Passwords do not match!");
+          setError("Passwords do not match");
           return;
         }
 
@@ -79,6 +74,7 @@ export default function AuthForms({ type }: AuthFormsProps) {
         });
 
         setUser(user);
+        setError(null);
         router.push("/catalogue");
       }
     } catch (error) {
@@ -90,8 +86,13 @@ export default function AuthForms({ type }: AuthFormsProps) {
     <div className={css.authWrapper}>
       <form
         noValidate
-        className={`${css.authForm}  ${open ? css.open : ""}`}
-        action={handleSubmit}
+        className={`${css.authForm} ${open ? css.open : ""}`}
+        onSubmit={(e) => {
+          e.preventDefault();
+
+          const formData = new FormData(e.currentTarget);
+          handleSubmit(formData);
+        }}
       >
         <div className={`${css.formContent}  ${open ? css.open : ""}`}>
           <div className={css.formContentInner}>
