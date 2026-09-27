@@ -4,17 +4,17 @@ import { errorCatcher } from "@/app/api/_utils/utils";
 
 interface RouteContext {
   params: Promise<{
-    type: string;
-    movieId: string;
+    media_type: string;
+    tmdbId: number;
   }>;
 }
 
 export async function GET(req: NextRequest, { params }: RouteContext) {
   try {
-    const { type, movieId } = await params;
+    const { media_type, tmdbId } = await params;
 
     const cookieHeader = req.headers.get("cookie");
-    const res = await api.get(`/profile/reviews/${type}/${movieId}`, {
+    const res = await api.get(`/profile/reviews/${media_type}/${tmdbId}`, {
       headers: {
         Cookie: cookieHeader ?? "",
       },

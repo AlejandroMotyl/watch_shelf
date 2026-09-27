@@ -8,7 +8,7 @@ export type Rating = {
 };
 export type SaveRatingVariables = {
   tmdbId: number;
-  type: "movie" | "tv";
+  media_type: "movie" | "tv";
   rating: number;
 };
 export type SaveRatingResponse = { rating: Rating };

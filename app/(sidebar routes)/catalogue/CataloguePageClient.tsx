@@ -1,7 +1,6 @@
 "use client";
 
 import Hero from "@/components/Hero/Hero";
-import css from "./page.module.css";
 import Trending from "@/components/Trending/Trending";
 import ContinueWatch from "@/components/ContinueWatch/ContinueWatch";
 import { useQuery } from "@tanstack/react-query";

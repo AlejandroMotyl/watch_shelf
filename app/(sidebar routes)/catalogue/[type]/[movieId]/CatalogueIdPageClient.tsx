@@ -19,7 +19,7 @@ import UserReviewSection from "@/components/UserReviewSection/UserReviewSection"
 
 interface CatalogueIdPageClientProps {
   type: "movie" | "tv";
-  id: string;
+  id: number;
 }
 
 export default function CatalogueIdPageClient({
@@ -181,7 +181,7 @@ export default function CatalogueIdPageClient({
                 type={media.media_type}
               />
 
-              <UserRating id={id} type={type} />
+              <UserRating tmdbId={id} media_type={type} />
             </div>
           </div>
         </div>
@@ -268,7 +268,7 @@ export default function CatalogueIdPageClient({
           </div>
         </section>
 
-        <UserReviewSection id={id} type={type} />
+        <UserReviewSection id={id} media_type={type} />
       </section>
 
       {isTrailerOpen && trailer && (
@@ -276,7 +276,7 @@ export default function CatalogueIdPageClient({
           videoKey={trailer.key}
           title={trailer.name}
           tmdbId={media.id}
-          type={media.media_type}
+          media_type={media.media_type}
           startSeconds={watchHistory?.progress_seconds ?? 0}
           onClose={() => setIsTrailerOpen(false)}
         />

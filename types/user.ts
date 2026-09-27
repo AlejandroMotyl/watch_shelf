@@ -41,7 +41,7 @@ export type UserReviewDetail = {
 };
 export type SaveReviewVariables = {
   tmdbId: number;
-  type: "movie" | "tv";
+  media_type: "movie" | "tv";
   reviewContent: string;
 };
 

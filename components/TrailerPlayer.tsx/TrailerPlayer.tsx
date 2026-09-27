@@ -9,7 +9,7 @@ interface TrailerPlayerProps {
   videoKey: string;
   title: string;
   tmdbId: number;
-  type: "movie" | "tv";
+  media_type: "movie" | "tv";
   startSeconds?: number;
   onClose: () => void;
 }
@@ -18,7 +18,7 @@ export default function TrailerPlayer({
   videoKey,
   title,
   tmdbId,
-  type,
+  media_type,
   startSeconds = 0,
   onClose,
 }: TrailerPlayerProps) {
@@ -46,7 +46,7 @@ export default function TrailerPlayer({
     try {
       await saveWatchHistory({
         tmdbId,
-        type,
+        media_type,
         progressSeconds,
         durationSeconds,
       });

@@ -51,32 +51,35 @@ export const getTrending = async (
 };
 
 export const getMediaById = async (
-  type: "movie" | "tv",
-  id: string,
+  media_type: "movie" | "tv",
+  tmdbId: number,
 ): Promise<GetMediaByIdResponse> => {
   const { data } = await api.get<GetMediaByIdResponse>(
-    `/catalogue/${type}/${id}`,
+    `/catalogue/${media_type}/${tmdbId}`,
   );
 
   return data;
 };
 
 export const getReviews = async (
-  type: "movie" | "tv",
+  media_type: "movie" | "tv",
   page: number = 1,
 ): Promise<MediaReviewsResponse> => {
-  const { data } = await api.get<MediaReviewsResponse>(`/reviews/${type}/`, {
-    params: { page },
-  });
+  const { data } = await api.get<MediaReviewsResponse>(
+    `/reviews/${media_type}/`,
+    {
+      params: { page },
+    },
+  );
   return data;
 };
 
 export const getMediaTrailerById = async (
-  type: "movie" | "tv",
-  id: string,
+  media_type: "movie" | "tv",
+  tmdbId: number,
 ): Promise<MediaTrailer> => {
   const { data } = await api.get<MediaTrailerResponse>(
-    `/catalogue/${type}/${id}/trailer`,
+    `/catalogue/${media_type}/${tmdbId}/trailer`,
   );
 
   return data.trailer;
@@ -150,46 +153,41 @@ export const addFavorite = async ({
   id,
 }: {
   type: "movie" | "tv";
-  id: string;
+  id: string | number;
 }): Promise<Favorite> => {
-  const { data } = await api.post<Favorite>("/profile/favorites", {
-    type,
-    id,
-  });
+  const { data } = await api.post<Favorite>(`/profile/favorites/${type}/${id}`);
 
   return data;
 };
-
 export const removeFavorite = async ({
   type,
   id,
 }: {
   type: "movie" | "tv";
-  id: string;
+  id: string | number;
 }): Promise<void> => {
   await api.delete(`/profile/favorites/${type}/${id}`);
 };
-
 // !!!!!!!!! RATING
 
 export const saveRating = async ({
   tmdbId,
-  type,
+  media_type,
   rating,
 }: SaveRatingVariables): Promise<Rating> => {
   const { data } = await api.post<SaveRatingResponse>("/profile/ratings", {
     tmdbId,
-    type,
+    media_type,
     rating,
   });
   return data.rating;
 };
 export const getRating = async (
-  type: "movie" | "tv",
+  media_type: "movie" | "tv",
   tmdbId: number,
 ): Promise<Rating | null> => {
   const { data } = await api.get<GetRatingResponse>(
-    `/profile/ratings/${type}/${tmdbId}`,
+    `/profile/ratings/${media_type}/${tmdbId}`,
   );
   return data.rating;
 };
@@ -197,11 +195,11 @@ export const getRating = async (
 // !!!!!!!!! HISTORY
 
 export const getWatchHistoryItem = async (
-  type: "movie" | "tv",
+  media_type: "movie" | "tv",
   tmdbId: number,
 ): Promise<WatchHistory | null> => {
   const { data } = await api.get<{ history: WatchHistory | null }>(
-    `/profile/history/${type}/${tmdbId}`,
+    `/profile/history/${media_type}/${tmdbId}`,
   );
 
   return data.history;
@@ -222,8 +220,8 @@ export const getWatchHistory = async (
 };
 
 type SaveWatchHistoryVariables = {
+  media_type: "movie" | "tv";
   tmdbId: number;
-  type: "movie" | "tv";
   progressSeconds: number;
   durationSeconds: number | null;
 };
@@ -232,7 +230,7 @@ type SaveWatchHistoryResponse = {
 };
 export const saveWatchHistory = async ({
   tmdbId,
-  type,
+  media_type,
   progressSeconds,
   durationSeconds,
 }: SaveWatchHistoryVariables): Promise<WatchHistory> => {
@@ -240,7 +238,7 @@ export const saveWatchHistory = async ({
     "/profile/history",
     {
       tmdbId,
-      type,
+      media_type,
       progressSeconds,
       durationSeconds,
     },
@@ -252,12 +250,12 @@ export const saveWatchHistory = async ({
 // !!!!!!!!! USER REVIEWS
 
 export const getReview = async (
-  type: "movie" | "tv",
+  media_type: "movie" | "tv",
   tmdbId: number,
 ): Promise<UserReviewDetail | null> => {
   const { data } = await api.get<{
     review: UserReviewDetail | null;
-  }>(`/profile/reviews/${type}/${tmdbId}`);
+  }>(`/profile/reviews/${media_type}/${tmdbId}`);
 
   return data.review;
 };
@@ -278,12 +276,12 @@ export const getUserReviews = async (
 
 export const saveReview = async ({
   tmdbId,
-  type,
+  media_type,
   reviewContent,
 }: SaveReviewVariables): Promise<UserReview> => {
   const { data } = await api.post<SaveReviewResponse>("/profile/reviews", {
     tmdbId,
-    type,
+    media_type,
     reviewContent,
   });
 

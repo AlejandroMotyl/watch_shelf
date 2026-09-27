@@ -29,7 +29,14 @@ export default function ReviewsPageClient() {
       },
     });
 
-  const reviews = data?.pages.flatMap((page) => page.results) ?? [];
+  const reviews = Array.from(
+    new Map(
+      (data?.pages.flatMap((page) => page.results) ?? []).map((review) => [
+        review.id,
+        review,
+      ]),
+    ).values(),
+  );
 
   if (isLoading) {
     return <div>Loading...</div>;

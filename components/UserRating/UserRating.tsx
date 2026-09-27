@@ -7,31 +7,31 @@ import { useState } from "react";
 import { useAuthStore } from "@/lib/store/authStore/authStore";
 import { filterParams } from "@/types/filter";
 interface UserRatingProps {
-  type: filterParams;
-  id: string;
+  media_type: filterParams;
+  tmdbId: number;
 }
 
-export default function UserRating({ type, id }: UserRatingProps) {
+export default function UserRating({ media_type, tmdbId }: UserRatingProps) {
   const queryClient = useQueryClient();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const [hoverRating, setHoverRating] = useState<number | null>(null);
 
   const { data: userRating, isLoading: isRatingLoading } = useQuery({
-    queryKey: ["rating", type, id],
-    queryFn: () => getRating(type, Number(id)),
-    enabled: !!type && !!id && !!isAuthenticated,
+    queryKey: ["rating", media_type, tmdbId],
+    queryFn: () => getRating(media_type, tmdbId),
+    enabled: !!media_type && !!tmdbId && !!isAuthenticated,
   });
 
   const ratingMutation = useMutation({
     mutationFn: (rating: number) =>
       saveRating({
-        tmdbId: Number(id),
-        type,
+        tmdbId,
+        media_type,
         rating,
       }),
 
     onSuccess: (rating) => {
-      queryClient.setQueryData(["rating", type, id], rating);
+      queryClient.setQueryData(["rating", media_type, tmdbId], rating);
     },
   });
 

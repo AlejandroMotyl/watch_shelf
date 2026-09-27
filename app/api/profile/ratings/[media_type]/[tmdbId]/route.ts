@@ -4,17 +4,17 @@ import { errorCatcher } from "@/app/api/_utils/utils";
 
 type Params = {
   params: Promise<{
-    type: "movie" | "tv";
-    id: string;
+    media_type: "movie" | "tv";
+    tmdbId: number;
   }>;
 };
 
 export async function GET(req: Request, { params }: Params) {
   try {
-    const { type, id } = await params;
+    const { media_type, tmdbId } = await params;
     const cookieHeader = req.headers.get("cookie");
 
-    const res = await api.get(`/profile/ratings/${type}/${id}`, {
+    const res = await api.get(`/profile/ratings/${media_type}/${tmdbId}`, {
       headers: {
         Cookie: cookieHeader ?? "",
       },

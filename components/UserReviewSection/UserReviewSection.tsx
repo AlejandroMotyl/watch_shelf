@@ -7,12 +7,12 @@ import { useState } from "react";
 import { getReview, saveReview } from "@/lib/api/clientApi";
 import { filterParams } from "@/types/filter";
 interface UserReviewSectionProps {
-  type: filterParams;
-  id: string;
+  media_type: filterParams;
+  id: number;
 }
 
 export default function UserReviewSection({
-  type,
+  media_type,
   id,
 }: UserReviewSectionProps) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -20,21 +20,21 @@ export default function UserReviewSection({
   const [reviewContent, setReviewContent] = useState("");
 
   const { data: userReview, isLoading: isReviewLoading } = useQuery({
-    queryKey: ["review", type, id],
-    queryFn: () => getReview(type, Number(id)),
-    enabled: !!type && !!id && !!isAuthenticated,
+    queryKey: ["review", media_type, id],
+    queryFn: () => getReview(media_type, id),
+    enabled: !!media_type && !!id && !!isAuthenticated,
   });
 
   const reviewMutation = useMutation({
     mutationFn: () =>
       saveReview({
-        tmdbId: Number(id),
-        type,
+        tmdbId: id,
+        media_type,
         reviewContent: reviewContent.trim(),
       }),
 
     onSuccess: (review) => {
-      queryClient.setQueryData(["review", type, id], review);
+      queryClient.setQueryData(["review", media_type, id], review);
 
       setReviewContent(review.review_content);
     },

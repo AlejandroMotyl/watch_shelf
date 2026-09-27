@@ -29,29 +29,3 @@ export async function GET(req: NextRequest) {
     return errorCatcher(error);
   }
 }
-
-export async function POST(req: NextRequest) {
-  try {
-    const cookieHeader = req.headers.get("cookie");
-    const { id, type } = await req.json();
-
-    const res = await api.post(
-      "/profile/favorites",
-      {
-        type,
-        id,
-      },
-      {
-        headers: {
-          Cookie: cookieHeader ?? "",
-        },
-      },
-    );
-
-    return NextResponse.json(res.data, {
-      status: res.status,
-    });
-  } catch (error) {
-    return errorCatcher(error);
-  }
-}
