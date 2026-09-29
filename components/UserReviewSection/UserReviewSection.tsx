@@ -2,7 +2,7 @@
 import { useAuthStore } from "@/lib/store/authStore/authStore";
 import css from "./UserReviewSection.module.css";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { showError } from "@/utils/iziToast";
+import { showError, showMessage } from "@/utils/iziToast";
 import { useState } from "react";
 import { getReview, saveReview } from "@/lib/api/clientApi";
 import { filterParams } from "@/types/filter";
@@ -37,6 +37,7 @@ export default function UserReviewSection({
       queryClient.setQueryData(["review", media_type, id], review);
 
       setReviewContent(review.review_content);
+      showMessage("Successfully updated your review");
     },
 
     onError: () => {
@@ -85,9 +86,11 @@ export default function UserReviewSection({
           )}
 
           <div className={css.reviewFooter}>
-            <span className={css.reviewCounter}>
-              {reviewContent.length}/2000
-            </span>
+            {reviewContent && (
+              <span className={css.reviewCounter}>
+                {reviewContent.length}/2000
+              </span>
+            )}
 
             <button
               type="button"
@@ -102,12 +105,6 @@ export default function UserReviewSection({
                   : "Post review"}
             </button>
           </div>
-
-          {reviewMutation.isError && (
-            <p className={css.reviewError} role="alert">
-              Failed to save your review. Please try again.
-            </p>
-          )}
         </>
       )}
     </section>

@@ -1,6 +1,6 @@
 import CataloguePageClient from "./CataloguePageClient";
 
-export default function CataloguePage() {
+export default async function CataloguePage() {
   return (
     <>
       <CataloguePageClient />

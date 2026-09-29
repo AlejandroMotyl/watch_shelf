@@ -162,9 +162,13 @@ export default function TrailerPlayer({
         aria-labelledby="trailer-title"
       >
         <div className={css.header}>
-          <h2 id="trailer-title" className={css.title}>
-            {title}
-          </h2>
+          <div className={css.titleWrapper}>
+            <span className={css.eyebrow}>TRAILER</span>
+
+            <h2 id="trailer-title" className={css.title}>
+              {title}
+            </h2>
+          </div>
 
           <button
             ref={closeButtonRef}

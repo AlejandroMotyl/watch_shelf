@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { api } from "@/app/api/api";
 
-import { errorCatcher } from "../_utils/utils";
+import { createApiResponse, errorCatcher } from "../_utils/utils";
 
 export async function GET(req: NextRequest) {
   try {
@@ -29,7 +29,7 @@ export async function PATCH(req: NextRequest) {
         Cookie: cookieHeader ?? "",
       },
     });
-    return NextResponse.json(res.data, { status: res.status });
+    return createApiResponse(res);
   } catch (error) {
     return errorCatcher(error);
   }

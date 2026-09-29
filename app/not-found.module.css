@@ -1,0 +1,130 @@
+.notFoundPage {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+}
+
+.notFoundCard {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  min-height: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 48px;
+  border: 1px solid var(--accent-primary);
+  border-radius: 20px;
+  background: var(--sidebar-bg);
+  text-align: center;
+}
+
+.errorCode {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--accent-primary);
+  font-size: clamp(180px, 30vw, 360px);
+  font-weight: 800;
+  line-height: 1;
+  opacity: 0.07;
+  user-select: none;
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 620px;
+}
+
+.eyebrow {
+  margin-bottom: 12px;
+  color: var(--accent-primary);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.title {
+  margin: 0;
+  color: var(--white);
+  font-size: clamp(32px, 5vw, 48px);
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.description {
+  max-width: 520px;
+  margin: 20px 0 32px;
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 10px;
+  background: var(--accent-primary);
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background var(--main-transition),
+    color var(--main-transition);
+}
+
+.backButton:hover,
+.backButton:focus {
+  background: var(--accent-hover);
+}
+
+.backButton:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 3px;
+}
+
+.arrow {
+  font-size: 20px;
+  line-height: 1;
+}
+
+@media screen and (max-width: 600px) {
+  .notFoundPage {
+    padding: 24px 16px;
+  }
+
+  .notFoundCard {
+    min-height: 480px;
+    padding: 32px 24px;
+    border-radius: 16px;
+  }
+
+  .title {
+    font-size: 32px;
+  }
+
+  .description {
+    margin-top: 16px;
+    font-size: 15px;
+  }
+
+  .backButton {
+    width: 100%;
+    max-width: 280px;
+  }
+}

@@ -1,6 +1,5 @@
-import { NextResponse } from "next/server";
 import { api } from "@/app/api/api";
-import { errorCatcher } from "@/app/api/_utils/utils";
+import { createApiResponse, errorCatcher } from "@/app/api/_utils/utils";
 import { WatchHistory } from "@/types/history";
 
 type Params = {
@@ -24,7 +23,7 @@ export async function GET(req: Request, { params }: Params) {
       },
     );
 
-    return NextResponse.json(res.data, { status: res.status });
+    return createApiResponse(res);
   } catch (error) {
     return errorCatcher(error);
   }

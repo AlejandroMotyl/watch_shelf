@@ -1,6 +1,6 @@
-import { errorCatcher } from "@/app/api/_utils/utils";
+import { createApiResponse, errorCatcher } from "@/app/api/_utils/utils";
 import { api } from "@/app/api/api";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 type Params = {
   params: Promise<{
@@ -19,13 +19,7 @@ export async function DELETE(req: NextRequest, { params }: Params) {
       },
     });
 
-    if (res.status === 204) {
-      return new NextResponse(null, { status: 204 });
-    }
-
-    return NextResponse.json(res.data, {
-      status: res.status,
-    });
+    return createApiResponse(res);
   } catch (error) {
     return errorCatcher(error);
   }
@@ -45,9 +39,7 @@ export async function POST(req: NextRequest, { params }: Params) {
       },
     );
 
-    return NextResponse.json(res.data, {
-      status: res.status,
-    });
+    return createApiResponse(res);
   } catch (error) {
     return errorCatcher(error);
   }

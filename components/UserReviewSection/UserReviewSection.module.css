@@ -35,16 +35,14 @@
 
   resize: none;
 
-  border: 1px solid var(--accent-primary);
-  border-radius: 10px;
+  border: 3px solid var(--gray);
+  border-radius: 12px;
+  background: var(--glass-bg);
 
-  background: transparent;
-  color: var(--white);
+  color: var(--black);
 
-  font-family: inherit;
-  font-size: 14px;
+  font: var(--pop-14px-regular);
   line-height: 1.6;
-
   outline: none;
 
   transition:
@@ -52,12 +50,7 @@
     background var(--main-transition);
 }
 
-.reviewTextarea::placeholder {
-  color: var(--text-secondary);
-}
-
 .reviewTextarea:focus {
-  background: var(--sidebar-bg);
   border-color: var(--accent-hover);
 }
 
@@ -112,7 +105,9 @@
   background: var(--accent-primary);
   color: var(--white);
 }
-
+.primaryButton:only-child {
+  margin-left: auto;
+}
 .primaryButton:hover {
   background: var(--accent-hover);
 }

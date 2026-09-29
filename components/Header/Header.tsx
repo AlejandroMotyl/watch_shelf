@@ -120,8 +120,8 @@ export default function Header() {
                 className={css.profileImage}
                 src={user.avatar_url ?? "/images/placeholder.jpeg"}
                 alt="userImage"
-                width={32}
-                height={32}
+                width={42}
+                height={42}
               />
               <span>
                 {user.username?.charAt(0).toUpperCase() +

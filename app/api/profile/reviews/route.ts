@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { api } from "../../api";
-import { errorCatcher } from "../../_utils/utils";
+import { createApiResponse, errorCatcher } from "../../_utils/utils";
 
 export async function GET(req: NextRequest) {
   try {
@@ -20,9 +20,7 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(res.data, {
-      status: res.status,
-    });
+    return createApiResponse(res);
   } catch (error) {
     return errorCatcher(error);
   }
@@ -39,9 +37,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(res.data, {
-      status: res.status,
-    });
+    return createApiResponse(res);
   } catch (error) {
     return errorCatcher(error);
   }

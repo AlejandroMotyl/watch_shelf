@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { api } from "@/app/api/api";
-import { errorCatcher } from "@/app/api/_utils/utils";
+import { createApiResponse, errorCatcher } from "@/app/api/_utils/utils";
 
 interface RouteContext {
   params: Promise<{
@@ -20,9 +20,7 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
       },
     });
 
-    return NextResponse.json(res.data, {
-      status: res.status,
-    });
+    return createApiResponse(res);
   } catch (error) {
     return errorCatcher(error);
   }

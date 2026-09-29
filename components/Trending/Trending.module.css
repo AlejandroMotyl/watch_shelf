@@ -68,3 +68,64 @@
   font: var(--pop-14px-regular);
   color: var(--black);
 }
+.scrollWrapper {
+  position: relative;
+}
+
+.arrowButton {
+  position: absolute;
+  top: 50%;
+
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+
+  background: var(--accent-primary);
+  color: var(--gray);
+
+  opacity: 0;
+  pointer-events: none;
+
+  font-size: 28px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  z-index: 2;
+
+  transition:
+    opacity var(--main-transition),
+    background var(--main-transition),
+    color var(--main-transition);
+}
+
+.leftButton {
+  left: 8px;
+  transform: translateY(-50%);
+}
+
+.rightButton {
+  right: 8px;
+  transform: translateY(-50%);
+}
+
+.arrowButton.visible {
+  opacity: 0.7;
+  pointer-events: auto;
+}
+
+.arrowButton:hover,
+.arrowButton:focus-visible {
+  opacity: 1;
+  background: var(--accent-hover);
+  color: var(--white);
+}
