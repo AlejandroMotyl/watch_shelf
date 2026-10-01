@@ -6,7 +6,7 @@ import { GetMediaByIdResponse } from "@/lib/api/clientApi";
 type Params = {
   params: Promise<{
     media_type: string;
-    tmdbId: number;
+    tmdbId: string;
   }>;
 };
 

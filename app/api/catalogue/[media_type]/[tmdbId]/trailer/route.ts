@@ -6,10 +6,9 @@ import { MediaTrailerResponse } from "@/types/media";
 type Params = {
   params: Promise<{
     media_type: string;
-    tmdbId: number;
+    tmdbId: string;
   }>;
 };
-
 export async function GET(request: Request, { params }: Params) {
   try {
     const { tmdbId, media_type } = await params;

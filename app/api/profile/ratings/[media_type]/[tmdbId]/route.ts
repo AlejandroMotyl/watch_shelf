@@ -3,8 +3,8 @@ import { createApiResponse, errorCatcher } from "@/app/api/_utils/utils";
 
 type Params = {
   params: Promise<{
-    media_type: "movie" | "tv";
-    tmdbId: number;
+    media_type: string;
+    tmdbId: string;
   }>;
 };
 

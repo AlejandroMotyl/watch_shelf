@@ -5,10 +5,9 @@ import { WatchHistory } from "@/types/history";
 type Params = {
   params: Promise<{
     media_type: string;
-    tmdbId: number;
+    tmdbId: string;
   }>;
 };
-
 export async function GET(req: Request, { params }: Params) {
   try {
     const cookieHeader = req.headers.get("cookie");

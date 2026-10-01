@@ -5,7 +5,7 @@ import { NextRequest } from "next/server";
 type Params = {
   params: Promise<{
     media_type: string;
-    tmdbId: number;
+    tmdbId: string;
   }>;
 };
 export async function DELETE(req: NextRequest, { params }: Params) {
