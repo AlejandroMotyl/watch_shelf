@@ -7,6 +7,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getTrending, getWatchHistory } from "@/lib/api/clientApi";
 import { useMediaFilterStore } from "@/lib/store/mediaFilterStore/mediaFilterStore";
 import { useAuthStore } from "@/lib/store/authStore/authStore";
+import Loading from "@/components/Loading/Loading";
+import FetchError from "@/components/FetchError/FetchError";
 
 export default function CataloguePageClient() {
   const filter = useMediaFilterStore((state) => state.filter);
@@ -26,17 +28,24 @@ export default function CataloguePageClient() {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading size="large" />;
   }
 
-  if (!data?.results?.length || (isAuthenticated && !historyData)) {
-    return <div>No movies found.</div>;
+  if (!data?.results?.length) {
+    return <FetchError message="Couldn't fetch trending media" />;
   }
   return (
     <>
       <Hero media={data.results[0]} />
       <Trending media={data.results.slice(1)} />
-      {isAuthenticated && <ContinueWatch history={historyData!.history} />}
+      {isAuthenticated &&
+        (historyLoading ? (
+          <Loading />
+        ) : !historyData ? (
+          <FetchError message="Couldn't fetch your media history" />
+        ) : (
+          <ContinueWatch history={historyData!.history} />
+        ))}
     </>
   );
 }

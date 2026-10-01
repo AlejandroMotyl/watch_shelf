@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import YouTube, { type YouTubeProps, type YouTubePlayer } from "react-youtube";
 import { saveWatchHistory } from "@/lib/api/clientApi";
 import css from "./TrailerPlayer.module.css";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface TrailerPlayerProps {
   videoKey: string;
@@ -22,9 +23,9 @@ export default function TrailerPlayer({
   startSeconds = 0,
   onClose,
 }: TrailerPlayerProps) {
-  // !!!!! CHANGE STYLES
   const playerRef = useRef<YouTubePlayer | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const queryClient = useQueryClient();
 
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
@@ -53,6 +54,9 @@ export default function TrailerPlayer({
     } catch (error) {
       console.error("Failed to save watch history:", error);
     }
+    queryClient.invalidateQueries({
+      queryKey: ["history", "collection"],
+    });
   };
 
   const startTracking = () => {

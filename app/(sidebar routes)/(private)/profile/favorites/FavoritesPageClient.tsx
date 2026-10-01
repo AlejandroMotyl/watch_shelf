@@ -7,6 +7,8 @@ import FavButton from "@/components/favButton/favButton";
 import Link from "next/link";
 import { TMDB_MEDIA_GENRES } from "@/lib/constants/genreIds";
 import LoadMoreBtn from "@/components/LoadMoreBtn/LoadMoreBtn";
+import Loading from "@/components/Loading/Loading";
+import FetchError from "@/components/FetchError/FetchError";
 
 export default function FavoritesPageClient() {
   const {
@@ -34,6 +36,10 @@ export default function FavoritesPageClient() {
     },
   });
 
+  if (isLoading) {
+    return <Loading size="large" />;
+  }
+
   const favorites =
     favoritesData?.pages.flatMap((page) => page.favorites ?? []) ?? [];
 
@@ -42,10 +48,7 @@ export default function FavoritesPageClient() {
       <h1 className={css.sectionTitle}>My favorites</h1>
 
       {favorites.length === 0 ? (
-        <div className={css.emptyState}>
-          <h2>No favorites yet</h2>
-          <p>Movies and shows you favorite will appear here.</p>
-        </div>
+        <FetchError message="Couldn't find any favorites" />
       ) : (
         <>
           <ul className={css.mediaList}>

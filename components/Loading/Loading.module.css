@@ -1,0 +1,60 @@
+/* Loading styles */
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--accent-primary);
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 150ms;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 300ms;
+}
+
+.small .dot {
+  width: 5px;
+  height: 5px;
+}
+
+.medium .dot {
+  width: 7px;
+  height: 7px;
+}
+
+.large .dot {
+  width: 10px;
+  height: 10px;
+}
+
+@keyframes pulse {
+  0%,
+  60%,
+  100% {
+    transform: scale(0.7);
+    opacity: 0.4;
+  }
+
+  30% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot {
+    animation: none;
+    opacity: 1;
+  }
+}

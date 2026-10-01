@@ -53,9 +53,13 @@ export default function Header() {
     }
   };
 
+  const showFilters =
+    pathname.startsWith("/reviews") ||
+    (pathname.startsWith("/catalogue") && !pathname.startsWith("/catalogue/"));
+
   return (
     <header className={css.header}>
-      {pathname !== "/profile" && !pathname.startsWith("/catalogue/") && (
+      {showFilters && (
         <div className={css.filters}>
           <button
             className={`${css.filterButton} ${filter === "movie" ? css.active : ""}`}

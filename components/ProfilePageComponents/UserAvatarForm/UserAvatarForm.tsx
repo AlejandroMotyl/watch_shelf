@@ -5,6 +5,7 @@ import { useAuthStore } from "@/lib/store/authStore/authStore";
 import { useMutation } from "@tanstack/react-query";
 import { updateAvatar } from "@/lib/api/clientApi";
 import { processImageForPreview } from "@/utils/imageProcessing";
+import Loading from "@/components/Loading/Loading";
 
 export default function UserAvatarForm() {
   const user = useAuthStore((state) => state.user);
@@ -24,7 +25,7 @@ export default function UserAvatarForm() {
   });
 
   if (!user) {
-    return <div>Loading...</div>;
+    return <Loading size="small" />;
   }
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

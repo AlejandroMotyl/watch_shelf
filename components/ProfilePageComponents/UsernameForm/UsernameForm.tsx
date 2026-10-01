@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { updateUsername } from "@/lib/api/clientApi";
 import { showError, showMessage } from "@/utils/iziToast";
 import { isAxiosError } from "axios";
+import Loading from "@/components/Loading/Loading";
 
 export default function UsernameForm() {
   const user = useAuthStore((state) => state.user);
@@ -45,7 +46,7 @@ export default function UsernameForm() {
   };
 
   if (!user) {
-    return <div>Loading...</div>;
+    return <Loading size="small" />;
   }
 
   return (

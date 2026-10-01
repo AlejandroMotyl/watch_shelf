@@ -8,6 +8,8 @@ import { getReviews } from "@/lib/api/clientApi";
 import { getPosterUrl } from "@/lib/services/mediaPosters";
 import { useMediaFilterStore } from "@/lib/store/mediaFilterStore/mediaFilterStore";
 import LoadMoreBtn from "@/components/LoadMoreBtn/LoadMoreBtn";
+import Loading from "@/components/Loading/Loading";
+import FetchError from "@/components/FetchError/FetchError";
 
 export default function ReviewsPageClient() {
   const filter = useMediaFilterStore((store) => store.filter);
@@ -39,11 +41,11 @@ export default function ReviewsPageClient() {
   );
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading size="large" />;
   }
 
   if (!reviews.length) {
-    return <div>No medias found.</div>;
+    return <FetchError message="Couldn't fetch reviews" />;
   }
 
   return (

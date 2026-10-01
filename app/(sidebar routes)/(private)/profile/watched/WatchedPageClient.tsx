@@ -7,6 +7,8 @@ import { getPosterUrl } from "@/lib/services/mediaPosters";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getWatchHistory } from "@/lib/api/clientApi";
 import LoadMoreBtn from "@/components/LoadMoreBtn/LoadMoreBtn";
+import Loading from "@/components/Loading/Loading";
+import FetchError from "@/components/FetchError/FetchError";
 
 export default function WatchedPageClient() {
   const {
@@ -16,8 +18,6 @@ export default function WatchedPageClient() {
     hasNextPage,
     fetchNextPage,
   } = useInfiniteQuery({
-    // !!!! DOESNT ADD INTO HISTORY IMMEDIATELY AFTER WATCHING
-
     queryKey: ["history", "collection"],
     queryFn: ({ pageParam }) => getWatchHistory(pageParam, 12),
     initialPageParam: 1,
@@ -36,6 +36,10 @@ export default function WatchedPageClient() {
     },
   });
 
+  if (isLoading) {
+    return <Loading size="large" />;
+  }
+
   const history =
     historyData?.pages.flatMap((page) => page.history ?? []) ?? [];
 
@@ -43,14 +47,8 @@ export default function WatchedPageClient() {
     <section className={css.section}>
       <h1 className={css.sectionTitle}>My history</h1>
 
-      {/* //!PROPER STYLES FOR EMPTY */}
       {history.length === 0 ? (
-        <div className={css.emptyState}>
-          <h2 className={css.emptyStateHeader}>No watch history yet</h2>
-          <p className={css.emptyStateText}>
-            Trailers you watch will appear here.
-          </p>
-        </div>
+        <FetchError message="No watch history so far, trailers you've watched will appear here" />
       ) : (
         <>
           <ul className={css.mediaList}>

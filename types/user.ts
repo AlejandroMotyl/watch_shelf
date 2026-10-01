@@ -25,6 +25,8 @@ export type UserReview = {
   poster_path: string | null;
   release_date: string | null;
   genres: number[];
+  rating?: number;
+  is_favorite: boolean;
 
   review_content: string;
 

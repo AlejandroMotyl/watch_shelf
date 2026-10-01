@@ -27,30 +27,48 @@
   color: var(--text-secondary);
   font-size: 14px;
 }
-
 .reviewTextarea {
   width: 100%;
   min-height: 150px;
   padding: 14px 16px;
-
   resize: none;
+  overflow-y: auto;
 
   border: 3px solid var(--gray);
   border-radius: 12px;
   background: var(--glass-bg);
-
   color: var(--black);
-
   font: var(--pop-14px-regular);
   line-height: 1.6;
   outline: none;
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-primary) transparent;
 
   transition:
     border-color var(--main-transition),
     background var(--main-transition);
 }
 
-.reviewTextarea:focus {
+.reviewTextarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.reviewTextarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.reviewTextarea::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--accent-primary);
+}
+
+.reviewTextarea::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-hover);
+}
+
+.reviewTextarea:focus,
+.reviewTextarea:hover {
   border-color: var(--accent-hover);
 }
 

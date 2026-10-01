@@ -77,6 +77,7 @@ export default function UserReviewSection({
             <textarea
               className={css.reviewTextarea}
               defaultValue={userReview?.review_content ?? ""}
+              onFocus={(event) => setReviewContent(event.target.value)}
               onChange={(event) => setReviewContent(event.target.value)}
               placeholder="What did you think about this movie or show?"
               maxLength={2000}

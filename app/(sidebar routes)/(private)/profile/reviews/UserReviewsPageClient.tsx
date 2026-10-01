@@ -7,6 +7,8 @@ import { TMDB_MEDIA_GENRES } from "@/lib/constants/genreIds";
 import { getPosterUrl } from "@/lib/services/mediaPosters";
 import LoadMoreBtn from "@/components/LoadMoreBtn/LoadMoreBtn";
 import Image from "next/image";
+import FetchError from "@/components/FetchError/FetchError";
+import Loading from "@/components/Loading/Loading";
 
 export default function UserReviewsPageClient() {
   const {
@@ -34,7 +36,7 @@ export default function UserReviewsPageClient() {
     },
   });
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <Loading size="large" />;
   }
   const reviews =
     reviewsData?.pages.flatMap((page) => page.reviews ?? []) ?? [];
@@ -44,10 +46,7 @@ export default function UserReviewsPageClient() {
       <h1 className={css.sectionTitle}>My reviews</h1>
 
       {reviews.length === 0 ? (
-        <div className={css.emptyState}>
-          <h2>No reviews yet</h2>
-          <p>Your movie and TV reviews will appear here.</p>
-        </div>
+        <FetchError message="No reviews yet, your movie and TV shows reviews will appear here" />
       ) : (
         <>
           <ul className={css.reviewList}>
@@ -55,16 +54,16 @@ export default function UserReviewsPageClient() {
               <li className={css.reviewItem} key={review.id}>
                 <Link
                   href={`/catalogue/${review.media_type}/${review.tmdb_id}`}
-                  className={css.reviewLink}
+                  className={css.reviewCard}
                 >
                   <div className={css.reviewMedia}>
                     <div className={css.reviewPoster}>
                       {review.poster_path ? (
                         <Image
                           src={getPosterUrl(review.poster_path, "w185")!}
-                          alt={review.title}
+                          alt={`${review.title} poster`}
                           width={185}
-                          height={185}
+                          height={278}
                         />
                       ) : (
                         <div className={css.reviewPosterPlaceholder}>
@@ -73,39 +72,68 @@ export default function UserReviewsPageClient() {
                       )}
                     </div>
 
-                    <div className={css.reviewDetails}>
-                      <div className={css.reviewMeta}>
-                        <span className={css.reviewMediaType}>
-                          {review.media_type}
-                        </span>
+                    <div className={css.mediaInfo}>
+                      <div className={css.mediaHeader}>
+                        <div className={css.mediaText}>
+                          <h2 className={css.mediaTitle}>{review.title}</h2>
 
-                        <span className={css.reviewDate}>
-                          Updated{" "}
-                          {new Date(review.updated_at).toLocaleDateString()}
+                          <p className={css.mediaMeta}>
+                            {review.release_date?.slice(0, 4)}
+                            {review.release_date &&
+                              review.genres?.length > 0 && (
+                                <span className={css.metaSeparator}>•</span>
+                              )}
+                            {(review.genres ?? [])
+                              .map((id) => TMDB_MEDIA_GENRES[id])
+                              .filter(Boolean)
+                              .join(" • ")}
+                          </p>
+                        </div>
+
+                        <span className={css.mediaType}>
+                          {review.media_type}
                         </span>
                       </div>
 
-                      <h3 className={css.reviewTitle}>{review.title}</h3>
+                      <div className={css.reviewBox}>
+                        <div className={css.reviewBoxHeader}>
+                          <span className={css.reviewLabel}>Your review</span>
+                          <div className={css.reviewActions}>
+                            {review.is_favorite && (
+                              <span
+                                className={css.favoriteStatus}
+                                aria-label="This title is in your favorites"
+                              >
+                                <svg
+                                  className={css.favoriteIcon}
+                                  aria-hidden="true"
+                                >
+                                  <use href="/sprite.svg#heart" />
+                                  <use href="/sprite.svg#heart-filled" />
+                                </svg>
+                              </span>
+                            )}
+                            <span className={css.reviewRating}>
+                              ★ {review.rating ?? "N/A"}
+                            </span>
+                          </div>
+                        </div>
 
-                      <p className={css.description}>
-                        {review.release_date?.slice(0, 4)}{" "}
-                        {review.release_date &&
-                          review.genres?.length > 0 &&
-                          "| "}
-                        {(review.genres ?? [])
-                          .map((id) => TMDB_MEDIA_GENRES[id])
-                          .filter(Boolean)
-                          .join(" • ")}
-                      </p>
+                        <p className={css.reviewText}>
+                          {review.review_content}
+                        </p>
+                      </div>
+
+                      <span className={css.reviewDate}>
+                        Updated{" "}
+                        {new Date(review.updated_at).toLocaleDateString()}
+                      </span>
                     </div>
                   </div>
-
-                  <p className={css.reviewContent}>{review.review_content}</p>
                 </Link>
               </li>
             ))}
           </ul>
-
           {hasNextPage && (
             <LoadMoreBtn
               fetchNextPage={fetchNextPage}

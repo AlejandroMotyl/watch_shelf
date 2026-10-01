@@ -10,7 +10,7 @@ import {
 } from "@/types/media";
 import { api } from "./api";
 import { filterParams } from "@/types/filter";
-import { MediaReviewsResponse, Review } from "@/types/reviews";
+import { MediaReviewsResponse } from "@/types/reviews";
 import {
   LoginData,
   RegisterData,

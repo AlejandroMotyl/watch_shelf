@@ -16,6 +16,8 @@ import { useAuthStore } from "@/lib/store/authStore/authStore";
 import { showError } from "@/utils/iziToast";
 import UserRating from "@/components/UserRating/UserRating";
 import UserReviewSection from "@/components/UserReviewSection/UserReviewSection";
+import Loading from "@/components/Loading/Loading";
+import FetchError from "@/components/FetchError/FetchError";
 
 interface CatalogueIdPageClientProps {
   type: "movie" | "tv";
@@ -31,7 +33,7 @@ export default function CatalogueIdPageClient({
   const [isTrailerOpen, setIsTrailerOpen] = useState(false);
 
   // MEDIA
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["media", type, id],
     queryFn: () => getMediaById(type, id),
     enabled: !!type && !!id,
@@ -77,20 +79,11 @@ export default function CatalogueIdPageClient({
   };
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <Loading size="large" />;
   }
 
-  if (isError) {
-    return (
-      <p>
-        Failed to load media:{" "}
-        {error instanceof Error ? error.message : "Unknown error"}
-      </p>
-    );
-  }
-
-  if (!media) {
-    return <p>Media not found.</p>;
+  if (isError || !media) {
+    return <FetchError message="Failed to fetch the media" />;
   }
 
   let length = "";
