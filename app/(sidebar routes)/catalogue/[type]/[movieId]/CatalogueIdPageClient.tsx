@@ -33,7 +33,7 @@ export default function CatalogueIdPageClient({
   const [isTrailerOpen, setIsTrailerOpen] = useState(false);
 
   // MEDIA
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["media", type, id],
     queryFn: () => getMediaById(type, id),
     enabled: !!type && !!id,
@@ -83,7 +83,12 @@ export default function CatalogueIdPageClient({
   }
 
   if (isError || !media) {
-    return <FetchError message="Failed to fetch the media" />;
+    return (
+      <FetchError
+        message="Failed to fetch the media"
+        onRetry={() => void refetch()}
+      />
+    );
   }
 
   let length = "";

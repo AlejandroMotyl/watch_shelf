@@ -48,7 +48,7 @@ export default function WatchedPageClient() {
       <h1 className={css.sectionTitle}>My history</h1>
 
       {history.length === 0 ? (
-        <FetchError message="No watch history so far, trailers you've watched will appear here" />
+        <FetchError title="No watch history so far, trailers you've watched will appear here" />
       ) : (
         <>
           <ul className={css.mediaList}>

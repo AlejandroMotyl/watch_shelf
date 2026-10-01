@@ -46,7 +46,7 @@ export default function UserReviewsPageClient() {
       <h1 className={css.sectionTitle}>My reviews</h1>
 
       {reviews.length === 0 ? (
-        <FetchError message="No reviews yet, your movie and TV shows reviews will appear here" />
+        <FetchError title="No reviews yet, your movie and TV shows reviews will appear here" />
       ) : (
         <>
           <ul className={css.reviewList}>

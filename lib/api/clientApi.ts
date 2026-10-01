@@ -155,7 +155,6 @@ export const addFavorite = async ({
   type: "movie" | "tv";
   id: string | number;
 }): Promise<Favorite> => {
-  console.log("CLIENT: addFavorite", { type, id });
   const { data } = await api.post<Favorite>(`/profile/favorites/${type}/${id}`);
 
   return data;

@@ -8,6 +8,7 @@ import { TMDB_MEDIA_GENRES } from "@/lib/constants/genreIds";
 import { WatchHistory } from "@/types/history";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import { useRef, useState } from "react";
+import FetchError from "../FetchError/FetchError";
 
 interface ContinueWatchProps {
   history: WatchHistory[];
@@ -48,157 +49,164 @@ export default function ContinueWatch({ history }: ContinueWatchProps) {
   return (
     <section className={css.conWatchSection}>
       <h2 className={css.title}>Continue watching</h2>
+      {history.length === 0 ? (
+        <FetchError title="No watch history so far, trailers you've watched will appear here" />
+      ) : (
+        <div className={css.scrollWrapper}>
+          <OverlayScrollbarsComponent
+            options={{
+              scrollbars: {
+                autoHide: "never",
+                theme: "scrollbarTheme",
+              },
+              overflow: {
+                x: "scroll",
+                y: "hidden",
+              },
+            }}
+            events={{
+              initialized: (instance) => {
+                const { viewport } = instance.elements();
 
-      <div className={css.scrollWrapper}>
-        <OverlayScrollbarsComponent
-          options={{
-            scrollbars: {
-              autoHide: "never",
-              theme: "scrollbarTheme",
-            },
-            overflow: {
-              x: "scroll",
-              y: "hidden",
-            },
-          }}
-          events={{
-            initialized: (instance) => {
-              const { viewport } = instance.elements();
+                viewportRef.current = viewport;
 
-              viewportRef.current = viewport;
+                const onWheel = (event: WheelEvent) => {
+                  if (event.deltaY === 0) return;
 
-              const onWheel = (event: WheelEvent) => {
-                if (event.deltaY === 0) return;
+                  const canScroll = viewport.scrollWidth > viewport.clientWidth;
 
-                const canScroll = viewport.scrollWidth > viewport.clientWidth;
+                  if (!canScroll) return;
 
-                if (!canScroll) return;
+                  event.preventDefault();
+                  viewport.scrollLeft += event.deltaY * 1.5;
+                };
 
-                event.preventDefault();
-                viewport.scrollLeft += event.deltaY * 1.5;
-              };
+                wheelHandlerRef.current = onWheel;
 
-              wheelHandlerRef.current = onWheel;
+                viewport.addEventListener("wheel", onWheel, {
+                  passive: false,
+                });
 
-              viewport.addEventListener("wheel", onWheel, {
-                passive: false,
-              });
+                viewport.addEventListener("scroll", updateScrollState);
 
-              viewport.addEventListener("scroll", updateScrollState);
+                updateScrollState();
+              },
 
-              updateScrollState();
-            },
+              destroyed: (instance) => {
+                const { viewport } = instance.elements();
 
-            destroyed: (instance) => {
-              const { viewport } = instance.elements();
+                if (wheelHandlerRef.current) {
+                  viewport.removeEventListener(
+                    "wheel",
+                    wheelHandlerRef.current,
+                  );
 
-              if (wheelHandlerRef.current) {
-                viewport.removeEventListener("wheel", wheelHandlerRef.current);
+                  wheelHandlerRef.current = null;
+                }
 
-                wheelHandlerRef.current = null;
-              }
+                viewport.removeEventListener("scroll", updateScrollState);
+                viewportRef.current = null;
+              },
+            }}
+            defer
+          >
+            <ul className={css.conWatchList}>
+              {history.map((item) => {
+                const progress =
+                  item.duration_seconds && item.duration_seconds > 0
+                    ? Math.min(
+                        (item.progress_seconds / item.duration_seconds) * 100,
+                        100,
+                      )
+                    : 0;
 
-              viewport.removeEventListener("scroll", updateScrollState);
-              viewportRef.current = null;
-            },
-          }}
-          defer
-        >
-          <ul className={css.conWatchList}>
-            {history.map((item) => {
-              const progress =
-                item.duration_seconds && item.duration_seconds > 0
-                  ? Math.min(
-                      (item.progress_seconds / item.duration_seconds) * 100,
-                      100,
-                    )
-                  : 0;
-
-              return (
-                <li
-                  className={css.mediaItem}
-                  key={item.id}
-                  style={{
-                    backgroundImage: `url(${getPosterUrl(
-                      item.poster_path,
-                      "w500",
-                    )})`,
-                  }}
-                >
-                  <FavButton
-                    size="small"
-                    type={item.media_type}
-                    id={String(item.tmdb_id)}
-                  />
-
-                  <Link
-                    href={`/catalogue/${item.media_type}/${item.tmdb_id}`}
-                    className={css.mediaLink}
+                return (
+                  <li
+                    className={css.mediaItem}
+                    key={item.id}
+                    style={{
+                      backgroundImage: `url(${getPosterUrl(
+                        item.poster_path,
+                        "w500",
+                      )})`,
+                    }}
                   >
-                    <div className={css.titleWrapper}>
-                      <h3 className={css.mediaTitle}>{item.title}</h3>
+                    <FavButton
+                      size="small"
+                      type={item.media_type}
+                      id={String(item.tmdb_id)}
+                    />
 
-                      <p className={css.description}>
-                        {item.release_date?.slice(0, 4)} |{" "}
-                        {item.genres
-                          .map((id) => TMDB_MEDIA_GENRES[id])
-                          .join(" • ")}
-                      </p>
+                    <Link
+                      href={`/catalogue/${item.media_type}/${item.tmdb_id}`}
+                      className={css.mediaLink}
+                    >
+                      <div className={css.titleWrapper}>
+                        <h3 className={css.mediaTitle}>{item.title}</h3>
 
-                      <p className={css.watchedDate}>
-                        Watched {new Date(item.watched_at).toLocaleDateString()}
-                      </p>
+                        <p className={css.description}>
+                          {item.release_date?.slice(0, 4)} |{" "}
+                          {item.genres
+                            .map((id) => TMDB_MEDIA_GENRES[id])
+                            .join(" • ")}
+                        </p>
 
-                      {item.duration_seconds && (
-                        <div className={css.progressWrapper}>
-                          <div className={css.progressBar}>
-                            <div
-                              className={css.progress}
-                              style={{
-                                width: `${progress}%`,
-                              }}
-                            />
+                        <p className={css.watchedDate}>
+                          Watched{" "}
+                          {new Date(item.watched_at).toLocaleDateString()}
+                        </p>
+
+                        {item.duration_seconds && (
+                          <div className={css.progressWrapper}>
+                            <div className={css.progressBar}>
+                              <div
+                                className={css.progress}
+                                style={{
+                                  width: `${progress}%`,
+                                }}
+                              />
+                            </div>
+
+                            <span className={css.progressText}>
+                              {Math.round(progress)}%
+                            </span>
                           </div>
+                        )}
+                      </div>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </OverlayScrollbarsComponent>
 
-                          <span className={css.progressText}>
-                            {Math.round(progress)}%
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </OverlayScrollbarsComponent>
+          <button
+            type="button"
+            className={`${css.arrowButton} ${
+              canScrollLeft ? css.visible : ""
+            } ${css.leftButton}`}
+            aria-hidden={!canScrollLeft}
+            tabIndex={canScrollLeft ? 0 : -1}
+            onClick={() => scrollByDirection("left")}
+            aria-label="Show previous continue watching items"
+          >
+            &lt;
+          </button>
 
-        <button
-          type="button"
-          className={`${css.arrowButton} ${
-            canScrollLeft ? css.visible : ""
-          } ${css.leftButton}`}
-          aria-hidden={!canScrollLeft}
-          tabIndex={canScrollLeft ? 0 : -1}
-          onClick={() => scrollByDirection("left")}
-          aria-label="Show previous continue watching items"
-        >
-          &lt;
-        </button>
-
-        <button
-          type="button"
-          className={`${css.arrowButton} ${
-            canScrollRight ? css.visible : ""
-          } ${css.rightButton}`}
-          aria-hidden={!canScrollRight}
-          tabIndex={canScrollRight ? 0 : -1}
-          onClick={() => scrollByDirection("right")}
-          aria-label="Show more continue watching items"
-        >
-          &gt;
-        </button>
-      </div>
+          <button
+            type="button"
+            className={`${css.arrowButton} ${
+              canScrollRight ? css.visible : ""
+            } ${css.rightButton}`}
+            aria-hidden={!canScrollRight}
+            tabIndex={canScrollRight ? 0 : -1}
+            onClick={() => scrollByDirection("right")}
+            aria-label="Show more continue watching items"
+          >
+            &gt;
+          </button>
+        </div>
+      )}
     </section>
   );
 }

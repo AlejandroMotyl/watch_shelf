@@ -14,7 +14,7 @@ import FetchError from "@/components/FetchError/FetchError";
 export default function ReviewsPageClient() {
   const filter = useMediaFilterStore((store) => store.filter);
 
-  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
+  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage, refetch } =
     useInfiniteQuery({
       queryKey: ["reviews", filter],
 
@@ -45,7 +45,12 @@ export default function ReviewsPageClient() {
   }
 
   if (!reviews.length) {
-    return <FetchError message="Couldn't fetch reviews" />;
+    return (
+      <FetchError
+        message="Couldn't fetch reviews"
+        onRetry={() => void refetch()}
+      />
+    );
   }
 
   return (
@@ -78,10 +83,7 @@ export default function ReviewsPageClient() {
                   <div className={css.mediaText}>
                     <h2 className={css.mediaTitle}>{media.title}</h2>
 
-                    <p className={css.mediaMeta}>
-                      {media.year}
-                      <span className={css.metaSeparator}>•</span>
-                    </p>
+                    <p className={css.mediaMeta}>{media.year}</p>
                   </div>
 
                   <Link

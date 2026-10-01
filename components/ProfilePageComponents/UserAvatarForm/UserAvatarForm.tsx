@@ -1,11 +1,12 @@
 import Image from "next/image";
 import css from "./UserAvatarForm.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "@/lib/store/authStore/authStore";
 import { useMutation } from "@tanstack/react-query";
 import { updateAvatar } from "@/lib/api/clientApi";
 import { processImageForPreview } from "@/utils/imageProcessing";
 import Loading from "@/components/Loading/Loading";
+import { showError, showMessage } from "@/utils/iziToast";
 
 export default function UserAvatarForm() {
   const user = useAuthStore((state) => state.user);
@@ -18,9 +19,13 @@ export default function UserAvatarForm() {
     mutationFn: updateAvatar,
     onSuccess: (data) => {
       setUser(data.user);
+      showMessage("Successfully updated profile picture");
+      setSelectedFile(null);
+      setPreviewUrl("");
     },
     onError: () => {
-      setError("Failed to update avatar");
+      setError("Failed to update profile picture");
+      showError("Failed to update profile picture");
     },
   });
 
@@ -38,7 +43,7 @@ export default function UserAvatarForm() {
     }
 
     if (!file.type.startsWith("image/")) {
-      setError("Only images");
+      setError("Only images allowed");
       return;
     }
 

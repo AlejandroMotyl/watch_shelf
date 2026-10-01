@@ -48,7 +48,7 @@ export default function FavoritesPageClient() {
       <h1 className={css.sectionTitle}>My favorites</h1>
 
       {favorites.length === 0 ? (
-        <FetchError message="Couldn't find any favorites" />
+        <FetchError title="No favorites yet, your favorited movie and TV shows will appear here" />
       ) : (
         <>
           <ul className={css.mediaList}>

@@ -20,10 +20,10 @@ export default function UsernameForm() {
       if (isAxiosError(error)) {
         showError(
           error.response?.data?.response?.validation?.body?.message ??
-            "Failed to update the password",
+            "Failed to update the username",
         );
       } else {
-        showError("Failed to update the password");
+        showError("Failed to update the username");
       }
     },
   });

@@ -14,7 +14,7 @@ export default function CataloguePageClient() {
   const filter = useMediaFilterStore((state) => state.filter);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["trending", filter],
     queryFn: () => getTrending(filter),
     refetchOnMount: false,
@@ -32,7 +32,12 @@ export default function CataloguePageClient() {
   }
 
   if (!data?.results?.length) {
-    return <FetchError message="Couldn't fetch trending media" />;
+    return (
+      <FetchError
+        message="Couldn't fetch trending media"
+        onRetry={() => void refetch()}
+      />
+    );
   }
   return (
     <>
@@ -42,9 +47,12 @@ export default function CataloguePageClient() {
         (historyLoading ? (
           <Loading />
         ) : !historyData ? (
-          <FetchError message="Couldn't fetch your media history" />
+          <FetchError
+            message="Couldn't fetch your media history"
+            onRetry={() => void refetch()}
+          />
         ) : (
-          <ContinueWatch history={historyData!.history} />
+          <ContinueWatch history={historyData.history} />
         ))}
     </>
   );
