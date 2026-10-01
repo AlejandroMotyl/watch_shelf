@@ -11,6 +11,12 @@ type Params = {
 export async function GET(request: Request, { params }: Params) {
   try {
     const { media_type } = await params;
+    if (media_type !== "movie" && media_type !== "tv") {
+      return NextResponse.json(
+        { message: "Invalid media type" },
+        { status: 400 },
+      );
+    }
 
     const { searchParams } = new URL(request.url);
     const page = searchParams.get("page") ?? "1";
