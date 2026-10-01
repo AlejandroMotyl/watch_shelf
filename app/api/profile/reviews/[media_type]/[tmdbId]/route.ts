@@ -2,14 +2,14 @@ import { NextRequest } from "next/server";
 import { api } from "@/app/api/api";
 import { createApiResponse, errorCatcher } from "@/app/api/_utils/utils";
 
-interface RouteContext {
+type Params = {
   params: Promise<{
     media_type: string;
-    tmdbId: number;
+    tmdbId: string;
   }>;
-}
+};
 
-export async function GET(req: NextRequest, { params }: RouteContext) {
+export async function GET(req: NextRequest, { params }: Params) {
   try {
     const { media_type, tmdbId } = await params;
 
