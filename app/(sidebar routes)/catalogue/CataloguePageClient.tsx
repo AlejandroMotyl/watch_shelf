@@ -23,7 +23,6 @@ export default function CataloguePageClient() {
   const { data: historyData, isLoading: historyLoading } = useQuery({
     queryKey: ["homeHistory"],
     queryFn: () => getWatchHistory(),
-    refetchOnMount: false,
     enabled: isAuthenticated,
   });
 

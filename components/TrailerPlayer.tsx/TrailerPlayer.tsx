@@ -51,12 +51,15 @@ export default function TrailerPlayer({
         progressSeconds,
         durationSeconds,
       });
+      queryClient.invalidateQueries({
+        queryKey: ["history", "collection"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["homeHistory"],
+      });
     } catch (error) {
       console.error("Failed to save watch history:", error);
     }
-    queryClient.invalidateQueries({
-      queryKey: ["history", "collection"],
-    });
   };
 
   const startTracking = () => {

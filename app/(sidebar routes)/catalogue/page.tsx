@@ -5,9 +5,12 @@ import {
 } from "@tanstack/react-query";
 import { getTrendingServer } from "@/lib/api/serverApi";
 import CataloguePageClient from "./CataloguePageClient";
+import { Metadata } from "next";
 
 const INITIAL_FILTER = "movie";
-
+export const metadata: Metadata = {
+  title: "Catalogue",
+};
 export default async function CataloguePage() {
   const queryClient = new QueryClient();
 

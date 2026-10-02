@@ -43,7 +43,7 @@ export default function Hero({ media }: HeroProps) {
           href={`/catalogue/${media.media_type}/${media.id}`}
           className={css.watchLink}
         >
-          Watch now
+          View media
         </Link>
         <FavButton size="big" id={String(media.id)} type={media.media_type} />
       </div>

@@ -2,6 +2,11 @@ import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { QueryClient } from "@tanstack/react-query";
 import { getWatchHistoryServer } from "@/lib/api/serverApi";
 import WatchedPageClient from "./WatchedPageClient";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "My History",
+};
 
 export default async function WatchedPage() {
   const queryClient = new QueryClient();

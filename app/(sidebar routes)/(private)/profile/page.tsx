@@ -1,17 +1,14 @@
-"use client";
-import { useAuthStore } from "@/lib/store/authStore/authStore";
 import css from "./page.module.css";
 import UserAvatarForm from "@/components/ProfilePageComponents/UserAvatarForm/UserAvatarForm";
 import UsernameForm from "@/components/ProfilePageComponents/UsernameForm/UsernameForm";
 import UserPasswordForm from "@/components/ProfilePageComponents/UserPasswordForm/UserPasswordForm";
-import Loading from "@/components/Loading/Loading";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Profile",
+};
 
 export default function ProfilePage() {
-  const user = useAuthStore((state) => state.user);
-
-  if (!user) {
-    return <Loading size="large" />;
-  }
   return (
     <main className={css.profilePage}>
       <section className={css.profileCard}>

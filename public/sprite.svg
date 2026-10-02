@@ -11,6 +11,12 @@
             <path d="M11 5 6 9H2v6h4l5 4z" />
             <path d="M19.07 4.93c1.8747 1.8753 2.9279 4.4184 2.9279 7.0701 0 2.6516-1.0532 5.1947-2.9279 7.07M15.54 8.4601c0.9374 0.9376 1.464 2.2091 1.464 3.535 0 1.3258-0.5266 2.5973-1.464 3.535" />
         </symbol>
+        <symbol id="icon-eye-crossed-medium" viewBox="0 0 32 32">
+            <path stroke="currentColor" fill="none" stroke-linejoin="miter" stroke-linecap="round" stroke-miterlimit="4" stroke-width="1.3333" d="M19.214 22.65c-1.086 0.504-2.291 0.833-3.56 0.833-4.779 0-8.654-4.655-8.654-5.838 0-0.67 1.245-2.456 3.194-3.878M23.269 19.516c0.662-0.797 1.038-1.502 1.038-1.871 0-1.183-3.874-5.837-8.654-5.837 2.103 0 3.808 1.691 3.808 3.777M15.654 19.362c-2.103 0-3.808-1.691-3.808-3.777M25 11.807c-2.636-2.181-5.713-3.434-9-3.434-1.185 0-2.342 0.163-3.462 0.473M7 11.807c0.244-0.202 0.492-0.396 0.744-0.582M7 7l16.714 16.875"></path>
+        </symbol>
+        <symbol id="icon-eye-medium" viewBox="0 0 32 32">
+            <path stroke="currentColor" fill="none" stroke-linejoin="miter" stroke-linecap="round" stroke-miterlimit="4" stroke-width="1.3333" d="M15.654 11.909c-4.779 0-8.654 4.621-8.654 5.795s3.874 5.795 8.654 5.795c4.779 0 8.654-4.621 8.654-5.795s-3.875-5.795-8.654-5.795zM15.654 11.909c-2.103 0-3.808 1.679-3.808 3.75s1.705 3.75 3.808 3.75c2.103 0 3.808-1.679 3.808-3.75s-1.705-3.75-3.808-3.75zM25 11.909c-2.636-2.166-5.713-3.409-9-3.409s-6.364 1.243-9 3.409"></path>
+        </symbol>
         <symbol id="pause" viewBox="0 0 24 24" stroke-width="2" stroke="var(--color1, #fff)" stroke-linecap="round" stroke-linejoin="round" fill="none">
             <title>pause</title>
             <path d="M10 4H6v16h4z" />

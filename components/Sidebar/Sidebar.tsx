@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import css from "./Sidebar.module.css";
 import { useAuthStore } from "@/lib/store/authStore/authStore";

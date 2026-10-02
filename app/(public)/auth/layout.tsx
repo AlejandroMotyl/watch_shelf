@@ -1,5 +1,26 @@
 import Link from "next/link";
 import css from "./layout.module.css";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: {
+    default: "Authentication",
+    template: "%s | Watch Shelf",
+  },
+  description: "Log in or create your Watch Shelf account.",
+  openGraph: {
+    title: "Watch Shelf",
+    description: "Discover and track movies and TV shows.",
+    images: [
+      {
+        url: "/images/auth-bg.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Watch Shelf",
+      },
+    ],
+  },
+};
 
 const LayoutClient = ({ children }: { children: React.ReactNode }) => {
   return (

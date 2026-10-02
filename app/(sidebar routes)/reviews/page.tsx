@@ -5,8 +5,12 @@ import {
 } from "@tanstack/react-query";
 import { getReviewsServer } from "@/lib/api/serverApi";
 import ReviewsPageClient from "./ReviewsPageClient";
+import { Metadata } from "next";
 
 const INITIAL_FILTER = "movie";
+export const metadata: Metadata = {
+  title: "Reviews",
+};
 
 export default async function ReviewsPage() {
   const queryClient = new QueryClient();

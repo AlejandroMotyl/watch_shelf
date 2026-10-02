@@ -126,6 +126,7 @@ export default function Header() {
                 alt="userImage"
                 width={42}
                 height={42}
+                loading="eager"
               />
               <span>
                 {user.username?.charAt(0).toUpperCase() +
@@ -152,7 +153,7 @@ export default function Header() {
                 type="button"
                 className={css.logoutButton}
               >
-                Logout
+                Log out
               </button>
             </div>
           </div>

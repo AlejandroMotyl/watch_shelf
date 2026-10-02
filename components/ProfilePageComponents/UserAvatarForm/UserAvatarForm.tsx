@@ -1,6 +1,7 @@
+"use client";
 import Image from "next/image";
 import css from "./UserAvatarForm.module.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuthStore } from "@/lib/store/authStore/authStore";
 import { useMutation } from "@tanstack/react-query";
 import { updateAvatar } from "@/lib/api/clientApi";
@@ -81,6 +82,7 @@ export default function UserAvatarForm() {
         alt="Profile picture"
         width={100}
         height={100}
+        loading="eager"
       />
 
       <div className={css.avatarActions}>

@@ -1,3 +1,4 @@
+"use client";
 import { useAuthStore } from "@/lib/store/authStore/authStore";
 import css from "./UsernameForm.module.css";
 import { useMutation } from "@tanstack/react-query";

@@ -6,6 +6,9 @@ import { getRating, saveRating } from "@/lib/api/clientApi";
 import { useState } from "react";
 import { useAuthStore } from "@/lib/store/authStore/authStore";
 import { filterParams } from "@/types/filter";
+import { showError } from "@/utils/iziToast";
+import { useRouter } from "next/navigation";
+
 interface UserRatingProps {
   media_type: filterParams;
   tmdbId: number;
@@ -15,6 +18,7 @@ export default function UserRating({ media_type, tmdbId }: UserRatingProps) {
   const queryClient = useQueryClient();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const [hoverRating, setHoverRating] = useState<number | null>(null);
+  const router = useRouter();
 
   const { data: userRating, isLoading: isRatingLoading } = useQuery({
     queryKey: ["rating", media_type, tmdbId],
@@ -33,12 +37,20 @@ export default function UserRating({ media_type, tmdbId }: UserRatingProps) {
     onSuccess: (rating) => {
       queryClient.setQueryData(["rating", media_type, tmdbId], rating);
     },
+    onError: () => {
+      showError("Failed to save the rating");
+    },
   });
 
   const selectedRating = userRating?.rating ?? null;
   const displayedRating = hoverRating ?? selectedRating;
 
   const handleRatingClick = (rating: number) => {
+    if (!isAuthenticated) {
+      showError("You must log in before rating");
+      router.push("/auth/login");
+      return;
+    }
     ratingMutation.mutate(rating);
   };
 
@@ -69,10 +81,6 @@ export default function UserRating({ media_type, tmdbId }: UserRatingProps) {
           ))
         )}
       </div>
-
-      {ratingMutation.isError && (
-        <span className={css.ratingError}>Failed to save rating.</span>
-      )}
     </div>
   );
 }

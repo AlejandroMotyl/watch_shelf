@@ -14,6 +14,9 @@ export default function AuthForms({ type }: AuthFormsProps) {
   const router = useRouter();
   const [open, setIsOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const setUser = useAuthStore((state) => state.setUser);
   const errorHandler = (error: unknown) => {
     if (isAxiosError(error)) {
@@ -119,24 +122,58 @@ export default function AuthForms({ type }: AuthFormsProps) {
             )}
             <label className={css.inputLabel}>
               Password
-              <input
-                className={css.formInput}
-                placeholder="Write your password here..."
-                type="password"
-                name="password"
-                required
-              />
+              <div className={css.passwordWrapper}>
+                <input
+                  className={css.formInput}
+                  placeholder="Write your password here..."
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  required
+                />
+                <button
+                  type="button"
+                  className={css.eyeButton}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  <svg className={css.eyeIcon}>
+                    <use
+                      href={`/sprite.svg#${
+                        showPassword
+                          ? "icon-eye-crossed-medium"
+                          : "icon-eye-medium"
+                      }`}
+                    />
+                  </svg>
+                </button>
+              </div>
             </label>
             {type === "register" && (
               <label className={css.inputLabel}>
                 Repeat Password
-                <input
-                  className={css.formInput}
-                  placeholder="Repeat your password here..."
-                  type="password"
-                  name="passwordRepeat"
-                  required
-                />
+                <div className={css.passwordWrapper}>
+                  <input
+                    className={css.formInput}
+                    placeholder="Repeat your password here..."
+                    type={showConfirmPassword ? "text" : "password"}
+                    name="passwordRepeat"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className={css.eyeButton}
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  >
+                    <svg className={css.eyeIcon}>
+                      <use
+                        href={`/sprite.svg#${
+                          showConfirmPassword
+                            ? "icon-eye-crossed-medium"
+                            : "icon-eye-medium"
+                        }`}
+                      />
+                    </svg>
+                  </button>
+                </div>
               </label>
             )}
           </div>
@@ -145,7 +182,13 @@ export default function AuthForms({ type }: AuthFormsProps) {
         {error && <p className={css.error}>{error}</p>}
 
         <button type="submit" className={css.authButton}>
-          {open ? "Submit" : type === "login" ? "Log in" : "Sign up"}
+          {open
+            ? type === "login"
+              ? "Log in"
+              : "Create account"
+            : type === "login"
+              ? "Log in"
+              : "Sign up"}
         </button>
       </form>
 

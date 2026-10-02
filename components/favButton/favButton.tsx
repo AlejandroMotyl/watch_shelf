@@ -10,6 +10,7 @@ import {
 import { showError } from "@/utils/iziToast";
 import { useAuthStore } from "@/lib/store/authStore/authStore";
 import { Favorite } from "@/types/media";
+import { useRouter } from "next/navigation";
 
 interface FavButtonProps {
   size: "big" | "small";
@@ -19,6 +20,7 @@ interface FavButtonProps {
 
 export default function FavButton({ size, type, id }: FavButtonProps) {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
@@ -72,7 +74,13 @@ export default function FavButton({ size, type, id }: FavButtonProps) {
   const isPending = addMutation.isPending || removeMutation.isPending;
 
   const handleFavorite = () => {
-    if (!isAuthenticated || isPending) {
+    if (!isAuthenticated) {
+      showError("You must log in before adding to favorites");
+      router.push("/auth/login");
+      return;
+    }
+
+    if (isPending) {
       return;
     }
 
