@@ -140,12 +140,12 @@ export default function Sidebar() {
               </svg>
               <ul className={css.authLinks}>
                 <li className={css.navItem}>
-                  <Link className={css.navLink} href="auth/login">
+                  <Link className={css.navLink} href="/auth/login">
                     <span>Login</span>
                   </Link>
                 </li>
                 <li className={css.navItem}>
-                  <Link className={css.navLink} href="auth/register">
+                  <Link className={css.navLink} href="/auth/register">
                     <span>Register</span>
                   </Link>
                 </li>
