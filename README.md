@@ -1,58 +1,61 @@
 # Watch Shelf — Frontend
 
-A movie and TV database built with **Next.js and React**, powered by TMDB and connected to a custom Express/PostgreSQL backend.
+A movie and TV tracking application built with **Next.js, React, and TypeScript**, powered by TMDB and connected to a custom Express API.
 
-The frontend provides the catalogue experience, authenticated user interface, personal media collections, reviews, ratings, watch history, and profile management.
+Watch Shelf allows users to discover movies and TV shows, manage personal collections, write reviews, rate media, track watch history, and manage their profiles.
+
+**Live Demo:** https://watch-shelf.vercel.app
+
+## Preview
+
+<!-- Add screenshots of the application here -->
+
+<!-- Example:
+![Watch Shelf catalogue](./docs/screenshots/catalogue.png)
+-->
 
 ## Features
 
-- 🎬 Movie and TV catalogue
-- 🔥 Trending movies and TV shows
-- 🔎 Media search and browsing
-- 🎞️ Movie and TV detail pages
-- ▶️ Trailer player with YouTube
-- ❤️ Favorites
-- ⭐ Personal ratings
-- 💬 Reviews
-- 🕐 Watch history
-- 👤 User profile
-- 🖼️ Avatar management
-- 🔐 Login, registration, logout and session handling
-- ✏️ Username and password management
-- 📱 Responsive interface
+- 🎬 Browse movies and TV shows
+- 🔥 Explore trending media
+- 🔎 Search and discover titles
+- 🎞️ View movie and TV details
+- ▶️ Watch trailers through YouTube
+- ❤️ Add and remove favorites
+- ⭐ Rate movies and TV shows
+- 💬 Create and manage reviews
+- 🕐 Track watch history and playback progress
+- 👤 Manage user profiles
+- 🖼️ Upload and update profile avatars
+- 🔐 User registration, login, and logout
+- 🔑 Change usernames and passwords
 - ⚡ Server-side data fetching and React Query hydration
 - 🔄 Infinite scrolling for user collections
+- 🔔 Loading, empty, and error states with retry actions
+- 🌙 Custom dark interface designed primarily for laptop and desktop screens
 
 ## Tech Stack
 
 ### Frontend
 
-- Next.js
-- React
-- TypeScript
-- TanStack Query
-- Zustand
-- CSS Modules
-- Axios
-- iziToast
-- OverlayScrollbars
-- React YouTube
+- **Next.js** — App Router, server rendering, and Backend for Frontend (BFF)
+- **React** — UI components
+- **TypeScript** — Type safety
+- **TanStack Query** — Server-state management, caching, mutations, and hydration
+- **Zustand** — Client-side authentication and user state
+- **Axios** — HTTP requests
+- **CSS Modules** — Component-level styling
+- **iziToast** — Notifications
+- **OverlayScrollbars** — Custom scrollbars
+- **React YouTube** — Trailer playback
 
-### Backend
+### Backend and Services
 
-The frontend communicates with a separate Express API responsible for:
-
-- Authentication and sessions
-- PostgreSQL user data
-- Favorites
-- Ratings
-- Reviews
-- Watch history
-- User profiles
-- TMDB integration
-- Cloudinary avatar storage
-
-See the backend repository for the API implementation.
+- **Express** — Custom REST API
+- **PostgreSQL** — Persistent user data
+- **Supabase** — Managed PostgreSQL hosting
+- **TMDB** — Movie and TV metadata
+- **Cloudinary** — Avatar storage
 
 ## Architecture
 
@@ -68,142 +71,164 @@ Next.js BFF
    ▼
 Express API
    │
-   ├── PostgreSQL
-   ├── TMDB
+   ├── Supabase PostgreSQL
+   ├── TMDB API
    └── Cloudinary
 ```
 
-The Next.js application acts as the frontend and BFF layer.
+The application separates the user interface, frontend-facing API layer, and backend business logic.
 
-Browser requests can go through Next.js route handlers, which forward requests to the Express API.
+### Next.js BFF
 
-Authentication cookies are managed by the backend. The BFF forwards incoming cookies to Express and passes `Set-Cookie` headers back to the browser without recreating the authentication logic.
+Next.js route handlers act as a Backend for Frontend layer between the browser and Express.
 
-## Data Fetching
+The BFF forwards requests to the Express API and passes authentication cookies between the browser and backend.
 
-The application uses **TanStack Query** for client-side server state.
+The Express API remains responsible for authentication, session management, request validation, and database operations.
 
-For pages where the initial data is known ahead of time, the Next.js server can prefetch the data and hydrate the React Query cache.
+### Backend
 
-For example:
+The Express API handles application logic, user data, authentication, media requests, and integrations with external services.
+
+Supabase provides managed PostgreSQL hosting, while Cloudinary stores processed avatar images.
+
+## Data Fetching and State Management
+
+TanStack Query manages server state, including data fetching, caching, mutations, and query invalidation.
+
+For pages where the initial data can be fetched on the server, Next.js prefetches the data and dehydrates the React Query cache. The resulting state is passed to the client through `HydrationBoundary`.
 
 ```text
 Next.js Server
       │
-      │ prefetch
       ▼
-Express API
+Prefetch API Data
       │
       ▼
 React Query Cache
       │
-      │ dehydrate
       ▼
-Browser
+Dehydrate State
+      │
+      ▼
+Browser Hydration
       │
       ▼
 useQuery / useInfiniteQuery
 ```
 
-This allows the initial page to render with data already available in the client cache instead of immediately making the same request again from the browser.
+This allows client components to reuse prefetched data rather than immediately issuing the same request again after hydration.
 
-Examples include:
+Server-side prefetching is used where appropriate for trending media, media details, and user collections.
 
-- Trending media
-- Favorites
-- Reviews
-- Watch history
-- Public media details
+Client-side queries and mutations handle interactive features such as favorites, ratings, reviews, and watch-history updates.
 
-User-specific interactive features such as ratings, reviews, favorites, and trailer/watch-history interactions remain client-driven where appropriate.
+Zustand maintains client-side user state, while TanStack Query manages server data.
 
 ## Authentication
 
-Authentication is handled by the Express backend using database-backed sessions.
+Authentication is implemented by the custom Express backend using database-backed sessions.
 
-The frontend does not implement the session system itself.
+The backend manages:
 
-The backend sets HTTP-only cookies containing:
+- Registration and login
+- Session creation and validation
+- Access-token refresh
+- Logout and session invalidation
+- Password changes
 
-- Access token
-- Refresh token
-- Session ID
+Authentication cookies are issued by Express. The Next.js BFF forwards incoming cookies to the backend and passes `Set-Cookie` headers back to the browser without recreating the authentication logic.
 
-The Next.js BFF forwards these cookies between the browser and Express API.
-
-The frontend uses a small Zustand store for client-side authentication/user state.
+Zustand provides client-side access to user information for rendering authenticated UI.
 
 ## User Features
 
 ### Favorites
 
-Users can add and remove movies or TV shows from their personal favorites.
+Save and remove movies and TV shows from a personal collection.
 
 ### Ratings
 
-Users can rate media from 1–10.
+Rate movies and TV shows on a scale of 1–10.
 
 ### Reviews
 
-Users can create and update reviews for movies and TV shows.
+Create and manage reviews for individual titles.
 
 ### Watch History
 
-The application tracks watched media and playback progress.
+Track watched media and playback progress. Trailer playback can update watch-history records.
 
-Trailer playback can update watch history during playback.
+### Profile Management
 
-### Profile
-
-Users can:
-
-- View their profile
-- Change their username
-- Change their password
-- Upload an avatar
-- View their personal activity
+View profile information, update usernames and passwords, and upload profile avatars.
 
 ## UI and UX
 
-The interface uses CSS Modules and a custom dark visual style.
+The interface uses CSS Modules and a custom dark visual style, with a layout designed primarily for laptop and desktop screens.
 
 The application includes dedicated states for:
 
-- Loading
-- Empty results
-- Fetch errors
-- Retry actions
+- Loading and pending operations
+- Empty collections and search results
+- Fetch errors and retry actions
 - Authentication-dependent content
-- Responsive layouts
+- Reduced-motion preferences
 
-Native textarea scrolling and OverlayScrollbars are used where appropriate.
+## Deployment
 
-Animations include reduced-motion support.
+Watch Shelf is deployed across the following services:
+
+| Service                               | Purpose                     |
+| ------------------------------------- | --------------------------- |
+| [Vercel](https://vercel.com/)         | Next.js frontend and BFF    |
+| [Render](https://render.com/)         | Express backend API         |
+| [Supabase](https://supabase.com/)     | Managed PostgreSQL database |
+| [Cloudinary](https://cloudinary.com/) | Avatar storage              |
+
+- **Live Application:** https://watch-shelf.vercel.app
+- **Backend API:** https://watchshelfbackend.onrender.com
+
+TMDB supplies the external movie and TV metadata.
 
 ## Environment Variables
 
-Create a `.env.local` file:
+The frontend uses environment variables configured in Vercel.
+
+For local development, create a `.env.local` file in the frontend project.
+
+Example:
 
 ```env
-PORT=
-NODE_ENV=development
-
-NEXT_PUBLIC_BACKEND_URL=
-NEXT_PUBLIC_API_URL=
-
-TMDB_ACCESS_TOKEN=
-TMDB_API_KEY=
+NEXT_PUBLIC_BACKEND_URL=http://localhost:6000/api
+NEXT_PUBLIC_API_URL=http://localhost:3000
 ```
 
-Do not commit environment files or API credentials to the repository.
+Use the correct local URLs and API paths for your configuration. In Vercel, configure the corresponding variables with the appropriate production values.
+
+`NEXT_PUBLIC_BACKEND_URL` and `NEXT_PUBLIC_API_URL` are public environment variables. Their values can be exposed to browser-side JavaScript, so they must not contain secrets.
+
+TMDB credentials and Cloudinary secrets are configured on the backend and are not required by the frontend.
+
+Do not commit environment files or credentials to the repository.
 
 ## Getting Started
 
-Install dependencies:
+### Prerequisites
+
+- Node.js
+- npm
+- Access to a running Express backend
+
+### Installation
+
+Clone the repository and install dependencies:
 
 ```bash
 npm install
 ```
+
+Create `.env.local` and configure the required URLs.
 
 Start the development server:
 
@@ -211,31 +236,29 @@ Start the development server:
 npm run dev
 ```
 
-The application will be available through the Next.js development server.
+Open the local URL printed by Next.js, typically `http://localhost:3000`.
 
-## Scripts
+### Available Scripts
 
-```bash
-npm run dev
-npm run build
-npm run start
-npm run lint
-```
+| Command         | Description                      |
+| --------------- | -------------------------------- |
+| `npm run dev`   | Start the development server     |
+| `npm run build` | Build the production application |
+| `npm run start` | Start the production server      |
+| `npm run lint`  | Run ESLint                       |
 
 ## Related Repository
 
-The Express API and PostgreSQL integration are maintained separately.
-
-**Backend:** `<backend-repository-url>`
+**Backend Repository:** [Add your Express backend repository URL]
 
 ## Project Status
 
-This project is a portfolio application and is currently under development.
-
-The application is not currently deployed.
+Watch Shelf is a deployed portfolio project.
 
 ## Why I Built It
 
-I built Watch Shelf to practice building a full-stack application around a real external API while implementing my own authentication, user data management, server/client data fetching, and persistent user features.
+I built Watch Shelf to gain practical experience developing a full-stack application around a real external API while implementing authentication, persistent user data, and personalized features.
 
-The project focuses on understanding how the frontend, BFF, backend API, database, and external services work together in a complete application.
+The project explores how Next.js server and client rendering, a Backend for Frontend layer, a custom Express API, PostgreSQL, and external services work together in a complete application.
+
+It also gave me hands-on experience deploying and integrating a frontend, backend, database, and cloud-based file storage.
