@@ -6,14 +6,6 @@ Watch Shelf allows users to discover movies and TV shows, manage personal collec
 
 **Live Demo:** https://watch-shelf.vercel.app
 
-## Preview
-
-<!-- Add screenshots of the application here -->
-
-<!-- Example:
-![Watch Shelf catalogue](./docs/screenshots/catalogue.png)
--->
-
 ## Features
 
 - 🎬 Browse movies and TV shows
